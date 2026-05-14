@@ -1,0 +1,47 @@
+.emptyList {
+  padding: 20px 12px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.nameRow {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  background: var(--surface);
+  min-height: 44px;
+}
+
+.applyBar {
+  background: var(--surface);
+  border: 1px solid var(--gold-dim);
+  border-radius: var(--radius);
+  padding: 10px 11px;
+  margin-bottom: 12px;
+}
+
+.applyBarTitle {
+  font-size: 10px;
+  color: var(--gold-text);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-family: var(--font-sans);
+}
+
+.applyRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.applyEmpty {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+}

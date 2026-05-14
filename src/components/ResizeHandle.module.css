@@ -1,0 +1,33 @@
+.handle {
+  width: 4px;
+  background: var(--border);
+  cursor: col-resize;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 0.15s;
+  z-index: 10;
+  user-select: none;
+}
+
+.handle:hover,
+.handle.dragging {
+  background: var(--gold-dim);
+}
+
+.handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 28px;
+  background: var(--border2);
+  border-radius: 1px;
+  transition: background 0.15s;
+}
+
+.handle:hover::after,
+.handle.dragging::after {
+  background: var(--gold);
+}

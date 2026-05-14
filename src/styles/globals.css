@@ -1,0 +1,196 @@
+/* Fontin SmallCaps — Jos Buivenga / exljbris Font Foundry */
+@font-face {
+  font-family: 'Fontin SmallCaps';
+  src: url('/fonts/Fontin-SmallCaps.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fontin SmallCaps';
+  src: url('/fonts/Fontin-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fontin SmallCaps';
+  src: url('/fonts/Fontin-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #07070e;
+  --surface: #0f0f1a;
+  --panel: #13131f;
+  --border: #1e1e30;
+  --border2: #2a2a40;
+  --gold: #c8962a;
+  --gold-dim: #6a4e14;
+  --gold-text: #e8b84a;
+  --gold-glow: rgba(200, 150, 42, 0.15);
+  --text: #cdc7b3;
+  --muted: #555570;
+  --faint: #1a1a28;
+  --show: #1e6b2e;
+  --show-light: #3db854;
+  --show-bg: #0a1a0e;
+  --hide: #6b1e1e;
+  --hide-light: #cc4444;
+  --hide-bg: #1a0a0a;
+  --accent: #3a2a7a;
+  --accent-light: #b8b0e0;
+  --radius: 4px;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-sans: 'Fontin SmallCaps', serif;
+  --font-display: 'Fontin SmallCaps', serif;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ── Form elements ── */
+input, select, textarea {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 0 2px var(--gold-glow);
+}
+
+input[type="range"] {
+  accent-color: var(--gold);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--gold);
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  border: none;
+  box-shadow: none;
+  background: none;
+  padding: 0;
+}
+
+input[type="color"] {
+  width: 34px;
+  height: 28px;
+  padding: 2px 3px;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+/* ── Buttons ── */
+.btn {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  transition: all 0.15s;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.btn:hover {
+  border-color: var(--gold-dim);
+  color: var(--gold-text);
+  background: var(--panel);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold-dim), #8a6020);
+  border-color: var(--gold);
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--gold), #a07020);
+  box-shadow: 0 0 12px var(--gold-glow);
+}
+
+.btn-new {
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+
+.btn-new:hover {
+  background: var(--accent);
+  border-color: var(--accent-light);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(74, 58, 138, 0.3);
+}
+
+.btn-sm {
+  padding: 3px 8px;
+  font-size: 11px;
+}
+
+.btn-danger:hover {
+  color: var(--hide-light);
+  border-color: var(--hide);
+  background: var(--hide-bg);
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: var(--font-sans);
+  transition: color 0.1s;
+  line-height: 1;
+}
+
+.icon-btn:hover { color: var(--text); }
+.icon-btn.del:hover { color: var(--hide-light); }
