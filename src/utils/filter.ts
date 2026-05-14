@@ -1,5 +1,5 @@
 import type {
-  FilterRule, FilterActions, Condition, RgbaColor, ToggleableColor,
+  FilterRule, FilterActions, Condition, RgbaColor,
   NumericField, BoolField,
 } from '../types'
 import { RARITIES, NUMERIC_FIELDS, STRING_FIELDS, BOOL_FIELDS } from '../data/constants'

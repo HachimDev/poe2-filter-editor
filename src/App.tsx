@@ -23,11 +23,7 @@ export default function App() {
     const first = mkRule()
     return [first]
   })
-  const [selectedId, setSelectedId] = useState<string | null>(() => {
-    const first = mkRule()
-    // We'll sync this on first render; start null and select first on mount via initializer
-    return null
-  })
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [filterName, setFilterName] = useState('MyFilter')
   const [tab, setTab] = useState<EditorTab>('conditions')
   const [confirm, setConfirm] = useState<ConfirmState | null>(null)
