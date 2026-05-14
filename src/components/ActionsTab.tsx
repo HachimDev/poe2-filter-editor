@@ -157,6 +157,16 @@ export default function ActionsTab({ rule, onChange, visuals }: Props) {
               type="number" min={1} max={16} value={a.playAlertSound.id} style={{ width: 56 }}
               onChange={e => upd({ playAlertSound: { ...a.playAlertSound, id: +e.target.value } })}
             />
+            <button
+              className="icon-btn"
+              title="Play sound"
+              style={{ border: '1px solid #fff', borderRadius: 'var(--radius)', padding: '2px 7px', color: '#fff' }}
+              onClick={() => {
+                const audio = new Audio(`/sounds/${a.playAlertSound.id}.mp3`)
+                audio.volume = a.playAlertSound.volume / 300
+                audio.play().catch(() => {})
+              }}
+            >▶</button>
             <span className={styles.inlineLabel}>Volume</span>
             <input
               type="range" min={0} max={300} value={a.playAlertSound.volume}
