@@ -48,12 +48,20 @@ export const MINIMAP_SHAPES = [
 ] as const
 
 export const SHAPE_CLIP_PATHS: Partial<Record<string, string>> = {
-  Diamond: 'polygon(50% 0%,100% 50%,50% 100%,0% 50%)',
-  Triangle: 'polygon(50% 0%,100% 100%,0% 100%)',
-  Star: 'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)',
-  Hexagon: 'polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)',
-  Cross: 'polygon(35% 0%,65% 0%,65% 35%,100% 35%,100% 65%,65% 65%,65% 100%,35% 100%,35% 65%,0% 65%,0% 35%,35% 35%)',
-  Pentagon: 'polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)',
+  Diamond:        'polygon(50% 0%,100% 50%,50% 100%,0% 50%)',
+  Triangle:       'polygon(50% 0%,100% 100%,0% 100%)',
+  Star:           'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)',
+  Hexagon:        'polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)',
+  Cross:          'polygon(35% 0%,65% 0%,65% 35%,100% 35%,100% 65%,65% 65%,65% 100%,35% 100%,35% 65%,0% 65%,0% 35%,35% 35%)',
+  Pentagon:       'polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)',
+  // crescent opening to the left — outer arc right side, inner arc cuts back
+  Moon:           'polygon(50% 0%,82% 7%,98% 30%,100% 50%,98% 70%,82% 93%,50% 100%,55% 85%,68% 72%,74% 55%,74% 45%,68% 28%,55% 15%)',
+  // teardrop pointing downward
+  Raindrop:       'polygon(50% 100%,12% 58%,2% 38%,3% 22%,12% 8%,27% 2%,50% 0%,73% 2%,88% 8%,97% 22%,98% 38%,88% 58%)',
+  // kite — elongated diamond, wider at bottom half
+  Kite:           'polygon(50% 0%,100% 30%,50% 100%,0% 30%)',
+  // house flipped upside-down — flat top, point at bottom
+  UpsideDownHouse:'polygon(0% 0%,100% 0%,100% 60%,50% 100%,0% 60%)',
 }
 
 export const CLASS_LIST = [

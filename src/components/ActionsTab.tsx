@@ -159,9 +159,10 @@ export default function ActionsTab({ rule, onChange, visuals }: Props) {
             />
             <span className={styles.inlineLabel}>Volume</span>
             <input
-              type="number" min={0} max={300} value={a.playAlertSound.volume} style={{ width: 66 }}
+              type="range" min={0} max={300} value={a.playAlertSound.volume}
               onChange={e => upd({ playAlertSound: { ...a.playAlertSound, volume: +e.target.value } })}
             />
+            <span className={styles.sliderVal}>{a.playAlertSound.volume}</span>
           </div>
         ) : <div className={styles.disabled}>Disabled</div>}
       </div>
