@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { MdAdd, MdFileDownload, MdFileUpload, MdClose } from 'react-icons/md'
 import type { VisualPreset, FilterRule } from '../types'
 import { mkActions, uid } from '../utils/filter'
@@ -69,6 +70,14 @@ export default function VisualsPage({ visuals, filterName, onAdd, onUpdate, onDe
 
   return (
     <>
+    <Helmet>
+      <title>Live Visual Preview — AnnulFilter PoE2 Filter Editor</title>
+      <meta name="description" content="Save your actions and re-use them on your rules." />
+      <link rel="canonical" href="https://annulfilter.com/myvisuals" />
+      <meta property="og:title" content="Live Visual Preview — AnnulFilter PoE2 Filter Editor" />
+      <meta property="og:url" content="https://annulfilter.com/myvisuals" />
+      <meta property="og:type" content="website" />
+    </Helmet>
     <div className={appStyles.workspace} ref={containerRef}>
 
       {/* LEFT — Visual List */}

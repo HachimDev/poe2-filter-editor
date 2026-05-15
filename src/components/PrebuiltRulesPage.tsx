@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
 import { MdArrowBack, MdCheck } from 'react-icons/md'
 import type { FilterRule } from '../types'
@@ -23,6 +24,14 @@ export default function PrebuiltRulesPage({ onAdd }: Props) {
 
   return (
     <div className={pageStyles.page}>
+      <Helmet>
+        <title>Prebuilt Filter Rules for Path of Exile 2 — AnnulFilter</title>
+        <meta name="description" content="Browse ready-to-use filter rules for Path of Exile 2. Add prebuilt rules to your filter in one click — no configuration needed." />
+        <link rel="canonical" href="https://annulfilter.com/prebuiltrules" />
+        <meta property="og:title" content="Prebuilt Filter Rules for Path of Exile 2 — AnnulFilter" />
+        <meta property="og:url" content="https://annulfilter.com/prebuiltrules" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className={pageStyles.pageHeader}>
         <span className={pageStyles.pageTitle}>Prebuilt Rules</span>
         <button className="btn btn-sm" onClick={() => navigate('/')}><MdArrowBack /> Back to Editor</button>

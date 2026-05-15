@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
 import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdShield } from 'react-icons/md'
 import type { FilterRule, EditorTab, VisualPreset } from './types'
@@ -228,6 +229,15 @@ export default function App() {
         } />
         <Route path="/" element={
       <div className={styles.workspace} ref={containerRef}>
+        <Helmet>
+          <title>AnnulFilter — Path of Exile 2 Filter Creator & Editor</title>
+          <meta name="description" content="Create, edit and export Path of Exile 2 loot filters for free. Import existing filters, build rules and actions, preview them live, and export your .filter file instantly." />
+          <link rel="canonical" href="https://annulfilter.com/" />
+          <meta property="og:title" content="AnnulFilter — Path of Exile 2 Filter Creator & Editor" />
+          <meta property="og:description" content="Free online tool to create and edit Path of Exile 2 loot filters. Live preview included." />
+          <meta property="og:url" content="https://annulfilter.com/" />
+          <meta property="og:type" content="website" />
+        </Helmet>
 
         {/* LEFT — Rule List */}
         <div className={styles.panelLeft} style={{ width: `${colWidths[0]}%` }}>
