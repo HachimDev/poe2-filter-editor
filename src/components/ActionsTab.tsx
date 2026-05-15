@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
+import { MdPlayArrow } from 'react-icons/md'
 import type { FilterRule, VisualPreset } from '../types'
-import { EFFECT_COLORS, MINIMAP_SHAPES } from '../data/constants'
+import { EFFECT_COLORS, MINIMAP_SHAPES, SHAPE_CLIP_PATHS, EFFECT_COLOR_CSS } from '../data/constants'
 import ColorControl from './ColorControl'
 import styles from './EditorTabs.module.css'
 import vStyles from './VisualsPage.module.css'
@@ -147,44 +148,6 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
         ) : <div className={styles.disabled}>Disabled</div>}
       </div>
 
-      {/* Minimap Icon */}
-      <div className={styles.actBox}>
-        <div className={styles.actLabel}>
-          <input
-            type="checkbox"
-            checked={a.minimapIcon.enabled}
-            onChange={e => upd({ minimapIcon: { ...a.minimapIcon, enabled: e.target.checked } })}
-          />
-          Minimap Icon
-        </div>
-        {a.minimapIcon.enabled ? (
-          <div className={styles.inlineRow}>
-            <span className={styles.inlineLabel}>Size</span>
-            <select
-              value={a.minimapIcon.size}
-              style={{ width: 54 }}
-              onChange={e => upd({ minimapIcon: { ...a.minimapIcon, size: +e.target.value as 0 | 1 | 2 } })}
-            >
-              {[0, 1, 2].map(s => <option key={s}>{s}</option>)}
-            </select>
-            <span className={styles.inlineLabel}>Color</span>
-            <select
-              value={a.minimapIcon.color}
-              onChange={e => upd({ minimapIcon: { ...a.minimapIcon, color: e.target.value } })}
-            >
-              {EFFECT_COLORS.map(c => <option key={c}>{c}</option>)}
-            </select>
-            <span className={styles.inlineLabel}>Shape</span>
-            <select
-              value={a.minimapIcon.shape}
-              onChange={e => upd({ minimapIcon: { ...a.minimapIcon, shape: e.target.value } })}
-            >
-              {MINIMAP_SHAPES.map(s => <option key={s}>{s}</option>)}
-            </select>
-          </div>
-        ) : <div className={styles.disabled}>Disabled</div>}
-      </div>
-
       {/* Alert Sound */}
       <div className={styles.actBox}>
         <div className={styles.actLabel}>
@@ -211,7 +174,7 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
                 audio.volume = a.playAlertSound.volume / 300
                 audio.play().catch(() => {})
               }}
-            >▶</button>
+            ><MdPlayArrow /></button>
             <span className={styles.inlineLabel}>Volume</span>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               {showVolTip && (
@@ -231,6 +194,76 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
             </div>
             <span className={styles.sliderVal}>{Math.round(a.playAlertSound.volume / 300 * 100)}%</span>
           </div>
+        ) : <div className={styles.disabled}>Disabled</div>}
+      </div>
+
+      {/* Minimap Icon */}
+      <div className={styles.actBox}>
+        <div className={styles.actLabel}>
+          <input
+            type="checkbox"
+            checked={a.minimapIcon.enabled}
+            onChange={e => upd({ minimapIcon: { ...a.minimapIcon, enabled: e.target.checked } })}
+          />
+          Minimap Icon
+        </div>
+        {a.minimapIcon.enabled ? (
+          <>
+            <div className={styles.inlineRow}>
+              <span className={styles.inlineLabel}>Size</span>
+              <select
+                value={a.minimapIcon.size}
+                onChange={e => upd({ minimapIcon: { ...a.minimapIcon, size: +e.target.value as 0 | 1 | 2 } })}
+              >
+                <option value={0}>Large</option>
+                <option value={1}>Medium</option>
+                <option value={2}>Small</option>
+              </select>
+              <span className={styles.inlineLabel}>Color</span>
+              <select
+                value={a.minimapIcon.color}
+                onChange={e => upd({ minimapIcon: { ...a.minimapIcon, color: e.target.value } })}
+              >
+                {EFFECT_COLORS.map(c => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div className={styles.shapeGrid}>
+              {MINIMAP_SHAPES.map(s => {
+                const col = EFFECT_COLOR_CSS[a.minimapIcon.color] ?? '#fff'
+                const clip = SHAPE_CLIP_PATHS[s]
+                const br = s === 'Circle' ? '50%' : '0'
+                const isSelected = a.minimapIcon.shape === s
+                return (
+                  <div
+                    key={s}
+                    className={`${styles.shapeCell} ${isSelected ? styles.shapeCellSelected : ''}`}
+                    title={s}
+                    onClick={() => upd({ minimapIcon: { ...a.minimapIcon, shape: s } })}
+                  >
+                    <div style={{
+                      background: '#060614',
+                      border: '1px solid #151530',
+                      borderRadius: 3,
+                      width: 28,
+                      height: 28,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                      <div style={{
+                        width: 16,
+                        height: 16,
+                        background: col,
+                        borderRadius: br,
+                        clipPath: clip,
+                      }} />
+                    </div>
+                    <span className={styles.shapeCellName}>{s === 'UpsideDownHouse' ? 'House↓' : s}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </>
         ) : <div className={styles.disabled}>Disabled</div>}
       </div>
     </div>

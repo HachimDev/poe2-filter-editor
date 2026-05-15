@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { MdClose, MdFolderOpen, MdDownload, MdUpload } from 'react-icons/md'
 import type { VisualPreset } from '../types'
 import { uid } from '../utils/filter'
 import styles from './VisualsTransferDialog.module.css'
@@ -79,14 +80,14 @@ export default function VisualsTransferDialog({ mode, visuals, defaultFileName =
 
         <div className={styles.header}>
           <span>{mode === 'export' ? 'Export Visuals' : 'Import Visuals'}</span>
-          <button className="icon-btn" onClick={onClose}>✕</button>
+          <button className="icon-btn" onClick={onClose}><MdClose /></button>
         </div>
 
         {mode === 'import' && !importedVisuals && (
           <div className={styles.filePick}>
             <p>Select a visuals JSON file exported from Annul Filter.</p>
             <button className="btn btn-primary" onClick={() => fileRef.current?.click()}>
-              📂 Choose File
+              <MdFolderOpen /> Choose File
             </button>
             <input ref={fileRef} type="file" accept=".json" style={{ display: 'none' }} onChange={handleFileChange} />
             {error && <div className={styles.error}>{error}</div>}
@@ -143,11 +144,11 @@ export default function VisualsTransferDialog({ mode, visuals, defaultFileName =
               <span className={styles.count}>{ids.size} selected</span>
               {mode === 'export' ? (
                 <button className="btn btn-primary" disabled={ids.size === 0} onClick={handleExport}>
-                  💾 Export
+                  <MdDownload /> Export
                 </button>
               ) : (
                 <button className="btn btn-primary" disabled={ids.size === 0} onClick={handleImport}>
-                  📂 Import
+                  <MdUpload /> Import
                 </button>
               )}
             </div>

@@ -29,7 +29,7 @@ export function mkActions(): FilterActions {
     fontSize: 32,
     textColor: { r: 200, g: 200, b: 180, a: 255 },
     borderColor: { enabled: false, r: 100, g: 100, b: 100, a: 255 },
-    backgroundColor: { enabled: false, r: 0, g: 0, b: 0, a: 200 },
+    backgroundColor: { enabled: false, r: 0, g: 0, b: 0, a: 255 },
     playEffect: { enabled: false, color: 'White', temp: false },
     minimapIcon: { enabled: false, size: 1, color: 'White', shape: 'Circle' },
     playAlertSound: { enabled: false, id: 1, volume: 300 },

@@ -36,7 +36,7 @@ export const EFFECT_COLORS = [
 ] as const
 
 export const EFFECT_COLOR_CSS: Record<string, string> = {
-  Red: '#ff4444', Green: '#44ff55', Blue: '#4488ff', Brown: '#aa7744',
+  Red: '#ff0000', Green: '#44ff55', Blue: '#4488ff', Brown: '#aa7744',
   White: '#eeeeee', Yellow: '#ffee44', Cyan: '#44ffff', Grey: '#888888',
   Orange: '#ff8833', Pink: '#ff88cc', Purple: '#aa44ff',
 }
@@ -54,10 +54,8 @@ export const SHAPE_CLIP_PATHS: Partial<Record<string, string>> = {
   Hexagon:        'polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)',
   Cross:          'polygon(35% 0%,65% 0%,65% 35%,100% 35%,100% 65%,65% 65%,65% 100%,35% 100%,35% 65%,0% 65%,0% 35%,35% 35%)',
   Pentagon:       'polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)',
-  // crescent opening to the left — outer arc right side, inner arc cuts back
-  Moon:           'polygon(50% 0%,82% 7%,98% 30%,100% 50%,98% 70%,82% 93%,50% 100%,55% 85%,68% 72%,74% 55%,74% 45%,68% 28%,55% 15%)',
-  // teardrop pointing downward
-  Raindrop:       'polygon(50% 100%,12% 58%,2% 38%,3% 22%,12% 8%,27% 2%,50% 0%,73% 2%,88% 8%,97% 22%,98% 38%,88% 58%)',
+  Moon:           'polygon(18% 5%,38% 0%,60% 3%,78% 12%,90% 26%,96% 42%,98% 50%,96% 58%,90% 74%,78% 88%,60% 97%,38% 100%,18% 95%,30% 80%,40% 65%,46% 50%,40% 35%,30% 20%)',
+  Raindrop:       'polygon(50% 0%,64% 18%,76% 36%,84% 52%,87% 66%,84% 80%,75% 91%,62% 98%,50% 100%,38% 98%,25% 91%,16% 80%,13% 66%,16% 52%,24% 36%,36% 18%)',
   // kite — elongated diamond, wider at bottom half
   Kite:           'polygon(50% 0%,100% 30%,50% 100%,0% 30%)',
   // house flipped upside-down — flat top, point at bottom

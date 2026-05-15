@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { MdAdd, MdFileDownload, MdFileUpload, MdClose } from 'react-icons/md'
 import type { VisualPreset, FilterRule } from '../types'
 import { mkActions, uid } from '../utils/filter'
 import { useResizableColumns } from '../utils/useResizableColumns'
@@ -75,9 +76,9 @@ export default function VisualsPage({ visuals, filterName, onAdd, onUpdate, onDe
         <div className={appStyles.panelHeader}>
           <span>{visuals.length} Visual{visuals.length !== 1 ? 's' : ''}</span>
           <div style={{ display: 'flex', gap: 4 }}>
-            <button className="btn btn-sm" onClick={() => setTransfer('import')}>↓ Import</button>
-            <button className="btn btn-sm" onClick={() => setTransfer('export')} disabled={visuals.length === 0}>↑ Export</button>
-            <button className="btn btn-sm" onClick={handleAdd}>+ Add</button>
+            <button className="btn btn-sm" onClick={() => setTransfer('import')}><MdFileDownload /> Import</button>
+            <button className="btn btn-sm" onClick={() => setTransfer('export')} disabled={visuals.length === 0}><MdFileUpload /> Export</button>
+            <button className="btn btn-sm" onClick={handleAdd}><MdAdd /> Add</button>
           </div>
         </div>
         <div className={appStyles.ruleList}>
@@ -100,7 +101,7 @@ export default function VisualsPage({ visuals, filterName, onAdd, onUpdate, onDe
                   className="icon-btn del"
                   title="Delete"
                   onClick={e => { e.stopPropagation(); handleDelete(v.id) }}
-                >✕</button>
+                ><MdClose /></button>
               </div>
             </div>
           ))}

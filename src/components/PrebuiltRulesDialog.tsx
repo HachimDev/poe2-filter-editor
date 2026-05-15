@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { MdClose, MdCheck } from 'react-icons/md'
 import type { FilterRule } from '../types'
 import { PREBUILT_SETS } from '../data/prebuiltRules'
 import styles from './PrebuiltRulesDialog.module.css'
@@ -23,7 +24,7 @@ export default function PrebuiltRulesDialog({ onAdd, onClose }: Props) {
       <div className={styles.dialog}>
         <div className={styles.header}>
           <span className={styles.title}>Prebuilt Rules</span>
-          <button className={styles.closeBtn} onClick={onClose}>✕</button>
+          <button className={styles.closeBtn} onClick={onClose}><MdClose /></button>
         </div>
 
         <div className={styles.body}>
@@ -57,7 +58,7 @@ export default function PrebuiltRulesDialog({ onAdd, onClose }: Props) {
 
                 <div className={styles.cardFooter}>
                   {isAdded ? (
-                    <span className={styles.addedBadge}>✓ Added to filter</span>
+                    <span className={styles.addedBadge}><MdCheck /> Added to filter</span>
                   ) : (
                     <button className="btn btn-primary btn-sm" onClick={() => handleAdd(set.id, set.rules)}>
                       Add to Filter

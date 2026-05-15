@@ -2,6 +2,7 @@ import type { Condition, FilterRule, NumericCondition, BoolCondition, ExplicitMo
 import { RARITIES, NUMERIC_OPS, NUMERIC_FIELDS, STRING_FIELDS, BOOL_FIELDS, CONDITION_LABELS } from '../data/constants'
 import BaseTypeSelect from './BaseTypeSelect'
 import styles from './ConditionRow.module.css'
+import { MdClose } from 'react-icons/md'
 
 interface Props {
   rule: FilterRule
@@ -46,7 +47,7 @@ export default function ConditionRow({ cond, onChange, onRemove }: Props) {
         <div className={styles.tagArea}>
           {c.values.map(v => (
             <span key={v} className={styles.tag}>
-              {v}<button className={styles.tagX} onClick={() => removeTag(v)}>✕</button>
+              {v}<button className={styles.tagX} onClick={() => removeTag(v)}><MdClose size={10} /></button>
             </span>
           ))}
           <input
@@ -108,7 +109,7 @@ export default function ConditionRow({ cond, onChange, onRemove }: Props) {
       <div className={styles.header}>
         <span className={styles.fieldLabel}>{CONDITION_LABELS[cond.field] ?? cond.field}</span>
         <button className="icon-btn del" onClick={onRemove} style={{ marginLeft: 'auto', fontSize: 11 }}>
-          ✕ Remove
+          <MdClose size={13} /> Remove
         </button>
       </div>
       {body}

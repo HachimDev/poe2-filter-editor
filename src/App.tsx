@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
+import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdShield } from 'react-icons/md'
 import type { FilterRule, EditorTab, VisualPreset } from './types'
 import { mkRule, uid, parseFilter, fullFilterText, downloadTextFile } from './utils/filter'
 import { useResizableColumns } from './utils/useResizableColumns'
@@ -9,6 +10,7 @@ import ActionsTab from './components/ActionsTab'
 import TextTab from './components/TextTab'
 import Preview from './components/Preview'
 import ConfirmDialog from './components/ConfirmDialog'
+import DownloadDialog from './components/DownloadDialog'
 import VisualsPage from './components/VisualsPage'
 import PrebuiltRulesPage from './components/PrebuiltRulesPage'
 import styles from './App.module.css'
@@ -28,6 +30,7 @@ export default function App() {
   const [filterName, setFilterName] = useState('MyFilter')
   const [tab, setTab] = useState<EditorTab>('conditions')
   const [confirm, setConfirm] = useState<ConfirmState | null>(null)
+  const [showDownload, setShowDownload] = useState(false)
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const isVisuals = pathname === '/myvisuals'
@@ -190,14 +193,14 @@ export default function App() {
           onChange={e => setFilterName(e.target.value)}
         />
         <div className={styles.headerRight}>
-          <button className="btn btn-new" onClick={handleNew}>✦ New Filter</button>
+          <button className="btn btn-new" onClick={handleNew}><MdAdd /> New Filter</button>
           <button
             className={`btn ${isVisuals ? 'btn-primary' : 'btn-new'}`}
             onClick={() => navigate(isVisuals ? '/' : '/myvisuals')}
-          >✦ My Visuals{visuals.length > 0 ? ` (${visuals.length})` : ''}</button>
-          <button className="btn" onClick={() => navigate('/prebuiltrules')}>⚙ Prebuilt Rules</button>
-          <button className="btn" onClick={() => fileRef.current?.click()}>📂 Import .filter</button>
-          <button className="btn btn-primary" onClick={handleDownload}>💾 Download .filter</button>
+          ><MdPalette /> My Visuals{visuals.length > 0 ? ` (${visuals.length})` : ''}</button>
+          <button className="btn" onClick={() => navigate('/prebuiltrules')}><MdMenuBook /> Prebuilt Rules</button>
+          <button className="btn" onClick={() => fileRef.current?.click()}><MdFolderOpen /> Import .filter</button>
+          <button className="btn btn-primary" onClick={() => setShowDownload(true)}><MdDownload /> Download .filter</button>
           <input
             ref={fileRef}
             type="file"
@@ -230,7 +233,7 @@ export default function App() {
         <div className={styles.panelLeft} style={{ width: `${colWidths[0]}%` }}>
           <div className={styles.panelHeader}>
             <span>{rules.length} Rule{rules.length !== 1 ? 's' : ''}</span>
-            <button className="btn btn-sm" onClick={addRule}>+ Add Rule</button>
+            <button className="btn btn-sm" onClick={addRule}><MdAdd /> Add Rule</button>
           </div>
           <div className={styles.ruleList}>
             {rules.map(r => (
@@ -248,10 +251,10 @@ export default function App() {
                 </span>
                 <span className={styles.ruleName}>{r.comment || '(no comment)'}</span>
                 <div className={styles.ruleMoves}>
-                  <button className="icon-btn" title="Move up" onClick={e => { e.stopPropagation(); moveRule(r.id, -1) }}>▲</button>
-                  <button className="icon-btn" title="Move down" onClick={e => { e.stopPropagation(); moveRule(r.id, 1) }}>▼</button>
-                  <button className="icon-btn" title="Duplicate" onClick={e => { e.stopPropagation(); duplicateRule(r.id) }}>⧉</button>
-                  <button className="icon-btn del" title="Delete" onClick={e => { e.stopPropagation(); deleteRule(r.id) }}>✕</button>
+                  <button className="icon-btn" title="Move up" onClick={e => { e.stopPropagation(); moveRule(r.id, -1) }}><MdKeyboardArrowUp /></button>
+                  <button className="icon-btn" title="Move down" onClick={e => { e.stopPropagation(); moveRule(r.id, 1) }}><MdKeyboardArrowDown /></button>
+                  <button className="icon-btn" title="Duplicate" onClick={e => { e.stopPropagation(); duplicateRule(r.id) }}><MdContentCopy /></button>
+                  <button className="icon-btn del" title="Delete" onClick={e => { e.stopPropagation(); deleteRule(r.id) }}><MdClose /></button>
                 </div>
               </div>
             ))}
@@ -264,7 +267,7 @@ export default function App() {
         <div className={styles.panelCenter} style={{ width: `${colWidths[1]}%` }}>
           {!selectedRule ? (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>⚔</div>
+              <div className={styles.emptyIcon}><MdShield /></div>
               <div>Select a rule to edit</div>
             </div>
           ) : (
@@ -336,6 +339,14 @@ export default function App() {
           message={confirm.message}
           onConfirm={confirm.onConfirm}
           onCancel={() => setConfirm(null)}
+        />
+      )}
+
+      {/* DOWNLOAD DIALOG */}
+      {showDownload && (
+        <DownloadDialog
+          onDownload={handleDownload}
+          onClose={() => setShowDownload(false)}
         />
       )}
 

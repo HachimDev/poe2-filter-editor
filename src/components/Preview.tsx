@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { FilterRule } from '../types'
-import { EFFECT_COLOR_CSS, SHAPE_CLIP_PATHS, CONDITION_LABELS, NUMERIC_FIELDS, STRING_FIELDS, BOOL_FIELDS } from '../data/constants'
+import { EFFECT_COLOR_CSS, SHAPE_CLIP_PATHS } from '../data/constants'
 import { clamp } from '../utils/filter'
 import styles from './Preview.module.css'
 
@@ -44,29 +44,12 @@ export default function Preview({ rule }: Props) {
   const fs = clamp(Math.round(a.fontSize * 0.82), 14, 36)
   const isHide = rule.type === 'Hide'
 
-  const mmSz = ([36, 26, 18] as const)[a.minimapIcon.size] ?? 26
+  const mmSz = ([18, 14, 9] as const)[a.minimapIcon.size] ?? 16
   const mmCol = EFFECT_COLOR_CSS[a.minimapIcon.color] ?? '#fff'
   const mmSh = a.minimapIcon.shape
-  const mmBr = mmSh === 'Circle' ? '50%' : mmSh === 'Square' ? '4px' : '0'
+  const mmBr = mmSh === 'Circle' ? '50%' : '0'
   const mmClip = SHAPE_CLIP_PATHS[mmSh]
 
-  const condSummary = rule.conditions
-    .map(c => {
-      if (STRING_FIELDS.includes(c.field as 'BaseType' | 'Class') || c.field === 'HasExplicitMod') {
-        const vals = (c as { values: string[] }).values
-        return `${CONDITION_LABELS[c.field]}: ${vals.join(', ') || 'any'}`
-      }
-      if (c.field === 'Rarity') return `Rarity: ${(c as { values: string[] }).values.join('|') || 'any'}`
-      if (NUMERIC_FIELDS.includes(c.field as typeof NUMERIC_FIELDS[number])) {
-        const nc = c as { operator: string; value: number }
-        return `${c.field} ${nc.operator} ${nc.value}`
-      }
-      if (BOOL_FIELDS.includes(c.field as typeof BOOL_FIELDS[number])) {
-        return `${c.field}: ${(c as { value: string }).value}`
-      }
-      return c.field
-    })
-    .join(' · ')
 
   return (
     <>
@@ -75,6 +58,21 @@ export default function Preview({ rule }: Props) {
         <input type="text" value={itemName} onChange={e => setItemName(e.target.value)} />
       </div>
       <div className={styles.previewArea}>
+        <div className={styles.minimapContainer}>
+          <img src="/minimap.png" alt="" className={styles.minimapImg} />
+          {a.minimapIcon.enabled && (
+            <div className={styles.minimapIconOverlay}>
+              <div style={{
+                width: mmSz,
+                height: mmSz,
+                background: mmCol,
+                borderRadius: mmBr,
+                clipPath: mmClip,
+                boxShadow: `0 0 10px ${mmCol}60`,
+              }} />
+            </div>
+          )}
+        </div>
         <div
           className={styles.visibility}
           style={{ color: isHide ? 'var(--hide-light)' : 'var(--show-light)' }}
@@ -82,11 +80,10 @@ export default function Preview({ rule }: Props) {
           {isHide ? '⊘ Hidden from ground' : '● Visible on ground'}
         </div>
 
-        <div className={styles.section}>
-          <div className={styles.sectionTitle}>Ground Label</div>
+        <div className={styles.groundCenter}>
           {beam
-            ? <div style={{ width: 2, height: 44, background: `linear-gradient(to bottom, transparent, ${beam})`, flexShrink: 0 }} />
-            : <div style={{ height: 44 }} />
+            ? <div style={{ width: 3, height: 130, background: `linear-gradient(to bottom, transparent, ${beam})`, flexShrink: 0, marginBottom: 8 }} />
+            : <div style={{ height: 110, marginBottom: 8 }} />
           }
           <div
             className={styles.itemLabel}
@@ -102,39 +99,6 @@ export default function Preview({ rule }: Props) {
             {itemName || 'Item'}
           </div>
         </div>
-
-        {a.minimapIcon.enabled && (
-          <div className={styles.section}>
-            <div className={styles.sectionTitle}>Minimap Icon</div>
-            <div className={styles.mmBg}>
-              <div style={{
-                width: mmSz,
-                height: mmSz,
-                background: mmCol,
-                borderRadius: mmBr,
-                clipPath: mmClip,
-                boxShadow: `0 0 10px ${mmCol}60`,
-              }} />
-            </div>
-            <div className={styles.note}>
-              {a.minimapIcon.color} {a.minimapIcon.shape} · size {a.minimapIcon.size}
-            </div>
-          </div>
-        )}
-
-        {beam && (
-          <div className={styles.note} style={{ color: beam }}>
-            ✦ {a.playEffect.color} beam{a.playEffect.temp ? ' (temp)' : ''}
-          </div>
-        )}
-
-        {a.playAlertSound.enabled && (
-          <div className={styles.note}>
-            🔊 Sound #{a.playAlertSound.id} · vol {a.playAlertSound.volume}
-          </div>
-        )}
-
-        {condSummary && <div className={styles.summary}>{condSummary}</div>}
       </div>
     </>
   )

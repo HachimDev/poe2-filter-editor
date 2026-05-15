@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { MdContentCopy, MdCheck } from 'react-icons/md'
 import type { FilterRule } from '../types'
 import { ruleToText, fullFilterText } from '../utils/filter'
 import styles from './EditorTabs.module.css'
@@ -31,7 +32,7 @@ export default function TextTab({ rule, rules, filterName }: Props) {
 
       <div style={{ marginTop: 10 }}>
         <button className="btn" onClick={handleCopy}>
-          {copied ? '✓ Copied!' : '📋 Copy All'}
+          {copied ? <><MdCheck /> Copied!</> : <><MdContentCopy /> Copy All</>}
         </button>
       </div>
     </div>

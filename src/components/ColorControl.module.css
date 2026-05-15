@@ -46,6 +46,20 @@
   text-align: right;
 }
 
+.pickerRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.pickerLabel {
+  font-size: 11px;
+  color: var(--muted);
+}
+
 .disabled {
   font-size: 11px;
   color: var(--muted);

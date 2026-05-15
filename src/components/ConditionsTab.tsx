@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { MdAdd } from 'react-icons/md'
 import type { FilterRule, Condition } from '../types'
 import { ALL_CONDITION_FIELDS, CONDITION_LABELS } from '../data/constants'
 import { mkCondition } from '../utils/filter'
@@ -62,7 +63,7 @@ export default function ConditionsTab({ rule, onChange }: Props) {
             <option key={f} value={f}>{CONDITION_LABELS[f]}</option>
           ))}
         </select>
-        <button className="btn btn-sm" onClick={addCondition}>+ Add</button>
+        <button className="btn btn-sm" onClick={addCondition}><MdAdd /> Add</button>
       </div>
     </div>
   )

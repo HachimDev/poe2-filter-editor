@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { MdArrowBack, MdCheck } from 'react-icons/md'
 import type { FilterRule } from '../types'
 import { PREBUILT_SETS } from '../data/prebuiltRules'
 import styles from './PrebuiltRulesDialog.module.css'
@@ -24,7 +25,7 @@ export default function PrebuiltRulesPage({ onAdd }: Props) {
     <div className={pageStyles.page}>
       <div className={pageStyles.pageHeader}>
         <span className={pageStyles.pageTitle}>Prebuilt Rules</span>
-        <button className="btn btn-sm" onClick={() => navigate('/')}>← Back to Editor</button>
+        <button className="btn btn-sm" onClick={() => navigate('/')}><MdArrowBack /> Back to Editor</button>
       </div>
 
       <div className={pageStyles.grid}>
@@ -58,7 +59,7 @@ export default function PrebuiltRulesPage({ onAdd }: Props) {
 
               <div className={styles.cardFooter}>
                 {isAdded ? (
-                  <span className={styles.addedBadge}>✓ Added to filter</span>
+                  <span className={styles.addedBadge}><MdCheck /> Added to filter</span>
                 ) : (
                   <button className="btn btn-primary btn-sm" onClick={() => handleAdd(set.id, set.rules)}>
                     Add to Filter

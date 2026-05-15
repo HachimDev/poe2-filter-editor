@@ -20,6 +20,7 @@
 .previewArea {
   flex: 1;
   overflow-y: auto;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,6 +28,46 @@
   gap: 18px;
   background: url('/background_livepreview.png') center center / cover no-repeat;
   background-color: var(--bg);
+}
+
+.groundCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  pointer-events: none;
+}
+
+.minimapContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 210px;
+  height: 210px;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.minimapImg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: 0.9;
+}
+
+.minimapIconOverlay {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .empty {
@@ -47,9 +88,13 @@
 }
 
 .visibility {
-  font-size: 11px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 13px;
   font-family: var(--font-sans);
   font-weight: 500;
+  pointer-events: none;
 }
 
 .section {
@@ -75,11 +120,19 @@
   border-style: solid;
   font-family: Georgia, serif;
   font-weight: 600;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.95);
+  text-shadow: none;
   letter-spacing: 0.02em;
   white-space: nowrap;
   border-radius: 1px;
   display: inline-block;
+}
+
+.mmBelow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
 }
 
 .mmBg {

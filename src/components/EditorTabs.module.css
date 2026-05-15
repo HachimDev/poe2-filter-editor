@@ -91,6 +91,45 @@
   color: var(--muted);
 }
 
+.shapeGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.shapeCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 3px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: var(--bg);
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.shapeCell:hover {
+  border-color: var(--border2);
+  background: var(--panel);
+}
+
+.shapeCellSelected {
+  border-color: var(--gold-dim);
+  background: var(--faint);
+}
+
+.shapeCellName {
+  font-size: 8px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.2;
+  font-family: var(--font-sans);
+  letter-spacing: 0.03em;
+}
+
 .codeArea {
   width: 100%;
   resize: vertical;
