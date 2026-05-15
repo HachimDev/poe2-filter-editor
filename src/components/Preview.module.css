@@ -25,7 +25,8 @@
   align-items: center;
   padding: 24px 14px;
   gap: 18px;
-  background: radial-gradient(ellipse at 50% 25%, #0e0e26 0%, var(--bg) 60%);
+  background: url('/background_livepreview.png') center center / cover no-repeat;
+  background-color: var(--bg);
 }
 
 .empty {

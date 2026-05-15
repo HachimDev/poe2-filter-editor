@@ -5,19 +5,44 @@ import { useResizableColumns } from '../utils/useResizableColumns'
 import ResizeHandle from './ResizeHandle'
 import ActionsTab from './ActionsTab'
 import Preview from './Preview'
+import VisualsTransferDialog from './VisualsTransferDialog'
 import appStyles from '../App.module.css'
 import styles from './VisualsPage.module.css'
 
 interface Props {
   visuals: VisualPreset[]
+  filterName: string
   onAdd: (v: VisualPreset) => void
   onUpdate: (v: VisualPreset) => void
   onDelete: (id: string) => void
+  onReplaceAll: (visuals: VisualPreset[]) => void
 }
 
-export default function VisualsPage({ visuals, onAdd, onUpdate, onDelete }: Props) {
+export default function VisualsPage({ visuals, filterName, onAdd, onUpdate, onDelete, onReplaceAll }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(visuals[0]?.id ?? null)
+  const [transfer, setTransfer] = useState<'export' | 'import' | null>(null)
   const { colWidths, containerRef, onDragLeft, onDragRight } = useResizableColumns()
+
+  const handleExport = (selected: VisualPreset[], fileName: string) => {
+    const safeName = fileName.replace(/[^a-zA-Z0-9_-]/g, '_')
+    const blob = new Blob([JSON.stringify(selected, null, 2)], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `${safeName}.json`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    setTransfer(null)
+  }
+
+  const handleImport = (imported: VisualPreset[], replace: boolean) => {
+    if (replace) {
+      onReplaceAll(imported)
+      setSelectedId(imported[0]?.id ?? null)
+    } else {
+      imported.forEach(v => onAdd(v))
+    }
+    setTransfer(null)
+  }
 
   const effectiveId = selectedId ?? visuals[0]?.id ?? null
   const selected = visuals.find(v => v.id === effectiveId) ?? null
@@ -42,13 +67,18 @@ export default function VisualsPage({ visuals, onAdd, onUpdate, onDelete }: Prop
     : null
 
   return (
+    <>
     <div className={appStyles.workspace} ref={containerRef}>
 
       {/* LEFT — Visual List */}
       <div className={appStyles.panelLeft} style={{ width: `${colWidths[0]}%` }}>
         <div className={appStyles.panelHeader}>
           <span>{visuals.length} Visual{visuals.length !== 1 ? 's' : ''}</span>
-          <button className="btn btn-sm" onClick={handleAdd}>+ Add</button>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <button className="btn btn-sm" onClick={() => setTransfer('import')}>↓ Import</button>
+            <button className="btn btn-sm" onClick={() => setTransfer('export')} disabled={visuals.length === 0}>↑ Export</button>
+            <button className="btn btn-sm" onClick={handleAdd}>+ Add</button>
+          </div>
         </div>
         <div className={appStyles.ruleList}>
           {visuals.length === 0 && (
@@ -116,5 +146,17 @@ export default function VisualsPage({ visuals, onAdd, onUpdate, onDelete }: Prop
       </div>
 
     </div>
+
+    {transfer && (
+      <VisualsTransferDialog
+        mode={transfer}
+        visuals={visuals}
+        defaultFileName={`${filterName}_visual`}
+        onExport={handleExport}
+        onImport={handleImport}
+        onClose={() => setTransfer(null)}
+      />
+    )}
+    </>
   )
 }

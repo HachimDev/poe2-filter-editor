@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import type { FilterRule, VisualPreset } from '../types'
 import { EFFECT_COLORS, MINIMAP_SHAPES } from '../data/constants'
 import ColorControl from './ColorControl'
@@ -9,10 +9,15 @@ interface Props {
   rule: FilterRule
   onChange: (rule: FilterRule) => void
   visuals?: VisualPreset[]
+  onSaveAsVisual?: (name: string) => void
 }
 
-export default function ActionsTab({ rule, onChange, visuals }: Props) {
+export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: Props) {
   const [applyId, setApplyId] = useState('')
+  const [saveAsName, setSaveAsName] = useState('')
+  const [saveError, setSaveError] = useState(false)
+  const [showVolTip, setShowVolTip] = useState(false)
+  const saveInputRef = useRef<HTMLInputElement>(null)
   const effectiveApplyId = applyId || visuals?.[0]?.id || ''
   const a = rule.actions
   const upd = (patch: Partial<typeof a>) => onChange({ ...rule, actions: { ...a, ...patch } })
@@ -24,19 +29,59 @@ export default function ActionsTab({ rule, onChange, visuals }: Props) {
 
   return (
     <div>
-      {visuals && visuals.length > 0 && (
-        <div className={vStyles.applyBar}>
-          <div className={vStyles.applyBarTitle}>Apply Visual</div>
-          <div className={vStyles.applyRow}>
-            <select
-              style={{ flex: 1 }}
-              value={effectiveApplyId}
-              onChange={e => setApplyId(e.target.value)}
-            >
-              {visuals.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
-            </select>
-            <button className="btn btn-sm btn-primary" onClick={handleApply}>Apply</button>
-          </div>
+      {(visuals && visuals.length > 0 || onSaveAsVisual) && (
+        <div className={vStyles.visualBars}>
+          {visuals && visuals.length > 0 && (
+            <div className={vStyles.applyBar}>
+              <div className={vStyles.applyBarTitle}>Apply Visual</div>
+              <div className={vStyles.applyRow}>
+                <select
+                  style={{ flex: 1, minWidth: 0 }}
+                  value={effectiveApplyId}
+                  onChange={e => setApplyId(e.target.value)}
+                >
+                  {visuals.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
+                </select>
+                <button className="btn btn-sm btn-primary" onClick={handleApply}>Apply</button>
+              </div>
+            </div>
+          )}
+          {onSaveAsVisual && (
+            <div className={vStyles.applyBar}>
+              <div className={vStyles.applyBarTitle}>Save as Visual</div>
+              <div className={vStyles.applyRow}>
+                <input
+                  ref={saveInputRef}
+                  style={{ flex: 1, minWidth: 0, borderColor: saveError ? 'var(--hide-light)' : undefined }}
+                  value={saveAsName}
+                  placeholder="Visual name…"
+                  onChange={e => { setSaveAsName(e.target.value); setSaveError(false) }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      if (!saveAsName.trim()) { setSaveError(true); return }
+                      onSaveAsVisual(saveAsName.trim())
+                      setSaveAsName('')
+                      setSaveError(false)
+                    }
+                  }}
+                />
+                <button
+                  className="btn btn-sm btn-primary"
+                  onClick={() => {
+                    if (!saveAsName.trim()) { setSaveError(true); return }
+                    onSaveAsVisual(saveAsName.trim())
+                    setSaveAsName('')
+                    setSaveError(false)
+                  }}
+                >Save</button>
+              </div>
+              {saveError && (
+                <div style={{ fontSize: 10, color: 'var(--hide-light)', marginTop: 5 }}>
+                  Please enter a name for the visual.
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -168,11 +213,23 @@ export default function ActionsTab({ rule, onChange, visuals }: Props) {
               }}
             >▶</button>
             <span className={styles.inlineLabel}>Volume</span>
-            <input
-              type="range" min={0} max={300} value={a.playAlertSound.volume}
-              onChange={e => upd({ playAlertSound: { ...a.playAlertSound, volume: +e.target.value } })}
-            />
-            <span className={styles.sliderVal}>{a.playAlertSound.volume}</span>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              {showVolTip && (
+                <div style={{
+                  position: 'absolute', top: -22, left: '50%', transform: 'translateX(-50%)',
+                  background: 'var(--panel)', border: '1px solid var(--border2)',
+                  borderRadius: 3, padding: '1px 6px', fontSize: 10,
+                  color: 'var(--text)', whiteSpace: 'nowrap', pointerEvents: 'none',
+                }}>{a.playAlertSound.volume}</div>
+              )}
+              <input
+                type="range" min={0} max={300} value={a.playAlertSound.volume}
+                onPointerDown={() => setShowVolTip(true)}
+                onPointerUp={() => setShowVolTip(false)}
+                onChange={e => upd({ playAlertSound: { ...a.playAlertSound, volume: +e.target.value } })}
+              />
+            </div>
+            <span className={styles.sliderVal}>{Math.round(a.playAlertSound.volume / 300 * 100)}%</span>
           </div>
         ) : <div className={styles.disabled}>Disabled</div>}
       </div>

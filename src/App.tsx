@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
 import type { FilterRule, EditorTab, VisualPreset } from './types'
 import { mkRule, uid, parseFilter, fullFilterText, downloadTextFile } from './utils/filter'
 import { useResizableColumns } from './utils/useResizableColumns'
@@ -9,7 +10,7 @@ import TextTab from './components/TextTab'
 import Preview from './components/Preview'
 import ConfirmDialog from './components/ConfirmDialog'
 import VisualsPage from './components/VisualsPage'
-import PrebuiltRulesDialog from './components/PrebuiltRulesDialog'
+import PrebuiltRulesPage from './components/PrebuiltRulesPage'
 import styles from './App.module.css'
 
 interface ConfirmState {
@@ -27,8 +28,9 @@ export default function App() {
   const [filterName, setFilterName] = useState('MyFilter')
   const [tab, setTab] = useState<EditorTab>('conditions')
   const [confirm, setConfirm] = useState<ConfirmState | null>(null)
-  const [page, setPage] = useState<'editor' | 'visuals'>('editor')
-  const [showPrebuilt, setShowPrebuilt] = useState(false)
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const isVisuals = pathname === '/myvisuals'
   const [visuals, setVisuals] = useState<VisualPreset[]>(() => {
     try { return JSON.parse(localStorage.getItem('poe2fe-visuals') ?? '[]') } catch { return [] }
   })
@@ -44,7 +46,7 @@ export default function App() {
 
   const addRule = () => {
     const r = mkRule()
-    setRules(prev => [...prev, r])
+    setRules(prev => [r, ...prev])
     setSelectedId(r.id)
     setTab('conditions')
   }
@@ -99,6 +101,11 @@ export default function App() {
   }
 
   // ── Visual presets ────────────────────────────────────────────────────────
+
+  const saveActionsAsVisual = (name: string) => {
+    if (!selectedRule) return
+    addVisual({ id: uid(), name, actions: selectedRule.actions })
+  }
 
   const saveVisuals = (next: VisualPreset[]) => {
     setVisuals(next)
@@ -171,9 +178,9 @@ export default function App() {
       {/* HEADER */}
       <header className={styles.header}>
         <div className={styles.logo}>
-          <span className={styles.logoSword}>⚔</span>
-          <span className={styles.logoText}>Path of Exile 2</span>
-          <span className={styles.logoBadge}>Filter Editor · 0.5</span>
+          <img src="/logo.png" alt="" className={styles.logoImg} />
+          <span className={styles.logoText} onClick={() => navigate('/')}>AnnulFilter</span>
+          <span className={styles.logoBadge}>PoE2 v0.4</span>
         </div>
         <input
           className={styles.filterName}
@@ -185,10 +192,10 @@ export default function App() {
         <div className={styles.headerRight}>
           <button className="btn btn-new" onClick={handleNew}>✦ New Filter</button>
           <button
-            className={`btn ${page === 'visuals' ? 'btn-primary' : 'btn-new'}`}
-            onClick={() => setPage(p => p === 'visuals' ? 'editor' : 'visuals')}
+            className={`btn ${isVisuals ? 'btn-primary' : 'btn-new'}`}
+            onClick={() => navigate(isVisuals ? '/' : '/myvisuals')}
           >✦ My Visuals{visuals.length > 0 ? ` (${visuals.length})` : ''}</button>
-          <button className="btn" onClick={() => setShowPrebuilt(true)}>⚙ Prebuilt Rules</button>
+          <button className="btn" onClick={() => navigate('/prebuiltrules')}>⚙ Prebuilt Rules</button>
           <button className="btn" onClick={() => fileRef.current?.click()}>📂 Import .filter</button>
           <button className="btn btn-primary" onClick={handleDownload}>💾 Download .filter</button>
           <input
@@ -202,15 +209,22 @@ export default function App() {
       </header>
 
       {/* WORKSPACE */}
-      {page === 'visuals' && (
-        <VisualsPage
-          visuals={visuals}
-          onAdd={addVisual}
-          onUpdate={updateVisual}
-          onDelete={deleteVisual}
-        />
-      )}
-      <div className={styles.workspace} ref={containerRef} style={{ display: page === 'visuals' ? 'none' : 'flex' }}>
+      <Routes>
+        <Route path="/prebuiltrules" element={
+          <PrebuiltRulesPage onAdd={handleAddPrebuilt} />
+        } />
+        <Route path="/myvisuals" element={
+          <VisualsPage
+            visuals={visuals}
+            filterName={filterName}
+            onAdd={addVisual}
+            onUpdate={updateVisual}
+            onDelete={deleteVisual}
+            onReplaceAll={saveVisuals}
+          />
+        } />
+        <Route path="/" element={
+      <div className={styles.workspace} ref={containerRef}>
 
         {/* LEFT — Rule List */}
         <div className={styles.panelLeft} style={{ width: `${colWidths[0]}%` }}>
@@ -289,7 +303,7 @@ export default function App() {
 
               <div className={styles.editorScroll}>
                 {tab === 'conditions' && <ConditionsTab rule={selectedRule} onChange={updateRule} />}
-                {tab === 'actions' && <ActionsTab rule={selectedRule} onChange={updateRule} visuals={visuals} />}
+                {tab === 'actions' && <ActionsTab rule={selectedRule} onChange={updateRule} visuals={visuals} onSaveAsVisual={saveActionsAsVisual} />}
                 {tab === 'text' && <TextTab rule={selectedRule} rules={rules} filterName={filterName} />}
               </div>
             </>
@@ -305,6 +319,15 @@ export default function App() {
         </div>
 
       </div>
+        } />
+      </Routes>
+
+      {/* FOOTER */}
+      <footer className={styles.footer}>
+        <span>Version 0.1</span>
+        <span>contact@annulfilter.com</span>
+        <span>Fan-made tool — not affiliated with Grinding Gear Games</span>
+      </footer>
 
       {/* CONFIRM DIALOG */}
       {confirm && (
@@ -316,13 +339,6 @@ export default function App() {
         />
       )}
 
-      {/* PREBUILT RULES DIALOG */}
-      {showPrebuilt && (
-        <PrebuiltRulesDialog
-          onAdd={handleAddPrebuilt}
-          onClose={() => setShowPrebuilt(false)}
-        />
-      )}
     </div>
   )
 }

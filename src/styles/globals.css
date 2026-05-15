@@ -30,26 +30,26 @@
 }
 
 :root {
-  --bg: #07070e;
-  --surface: #0f0f1a;
-  --panel: #13131f;
-  --border: #1e1e30;
-  --border2: #2a2a40;
+  --bg: #090908;
+  --surface: #111110;
+  --panel: #161614;
+  --border: #1f1f1c;
+  --border2: #2c2c28;
   --gold: #c8962a;
   --gold-dim: #6a4e14;
   --gold-text: #e8b84a;
   --gold-glow: rgba(200, 150, 42, 0.15);
   --text: #cdc7b3;
-  --muted: #555570;
-  --faint: #1a1a28;
+  --muted: #585850;
+  --faint: #1a1a17;
   --show: #1e6b2e;
   --show-light: #3db854;
   --show-bg: #0a1a0e;
   --hide: #6b1e1e;
   --hide-light: #cc4444;
   --hide-bg: #1a0a0a;
-  --accent: #3a2a7a;
-  --accent-light: #b8b0e0;
+  --accent: #2e2416;
+  --accent-light: #b09868;
   --radius: 4px;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-sans: 'Fontin SmallCaps', serif;
@@ -165,7 +165,7 @@ input[type="color"] {
   background: var(--accent);
   border-color: var(--accent-light);
   color: #fff;
-  box-shadow: 0 0 10px rgba(74, 58, 138, 0.3);
+  box-shadow: 0 0 10px rgba(180, 140, 60, 0.2);
 }
 
 .btn-sm {
