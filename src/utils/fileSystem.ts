@@ -1,3 +1,14 @@
+declare global {
+  interface Window {
+    showSaveFilePicker(options?: {
+      id?: string
+      suggestedName?: string
+      startIn?: string
+      types?: Array<{ description?: string; accept: Record<string, string[]> }>
+    }): Promise<FileSystemFileHandle>
+  }
+}
+
 export const hasFSA = typeof window !== 'undefined' && 'showSaveFilePicker' in window
 
 export async function saveWithPicker(filename: string, content: string): Promise<boolean> {
