@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { FilterRule } from '../types'
-import { EFFECT_COLOR_CSS, SHAPE_CLIP_PATHS } from '../data/constants'
+import { EFFECT_COLOR_CSS } from '../data/constants'
+import MinimapIcon from './MinimapIcon'
 import { clamp } from '../utils/filter'
 import styles from './Preview.module.css'
 
@@ -47,8 +48,6 @@ export default function Preview({ rule }: Props) {
   const mmSz = ([18, 14, 9] as const)[a.minimapIcon.size] ?? 16
   const mmCol = EFFECT_COLOR_CSS[a.minimapIcon.color] ?? '#fff'
   const mmSh = a.minimapIcon.shape
-  const mmBr = mmSh === 'Circle' ? '50%' : '0'
-  const mmClip = SHAPE_CLIP_PATHS[mmSh]
 
 
   return (
@@ -62,14 +61,7 @@ export default function Preview({ rule }: Props) {
           <img src="/minimap.png" alt="" className={styles.minimapImg} />
           {a.minimapIcon.enabled && (
             <div className={styles.minimapIconOverlay}>
-              <div style={{
-                width: mmSz,
-                height: mmSz,
-                background: mmCol,
-                borderRadius: mmBr,
-                clipPath: mmClip,
-                boxShadow: `0 0 10px ${mmCol}60`,
-              }} />
+              <MinimapIcon shape={mmSh} color={mmCol} size={mmSz} />
             </div>
           )}
         </div>

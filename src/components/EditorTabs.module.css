@@ -122,8 +122,8 @@
 }
 
 .shapeCellName {
-  font-size: 8px;
-  color: var(--muted);
+  font-size: 10px;
+  color: var(--text);
   text-align: center;
   line-height: 1.2;
   font-family: var(--font-sans);

@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
-import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdShield, MdMenu, MdFormatListBulleted, MdTune, MdVisibility, MdArrowBack, MdAutorenew } from 'react-icons/md'
+import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdMenu, MdFormatListBulleted, MdTune, MdVisibility, MdArrowBack, MdAutorenew } from 'react-icons/md'
 import type { FilterRule, EditorTab, VisualPreset } from './types'
 import { mkRule, uid, parseFilter, fullFilterText, downloadTextFile, generateRuleName } from './utils/filter'
 import { useResizableColumns } from './utils/useResizableColumns'
@@ -33,6 +33,20 @@ export default function App() {
   const [tab, setTab] = useState<EditorTab>('conditions')
   const [confirm, setConfirm] = useState<ConfirmState | null>(null)
   const [showDownload, setShowDownload] = useState(false)
+  const downloadedRef = useRef(false)
+
+  useEffect(() => {
+    if (rules.length > 0) downloadedRef.current = false
+  }, [rules])
+
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (rules.length === 0 || downloadedRef.current) return
+      e.preventDefault()
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [rules])
   const [mobilePanel, setMobilePanel] = useState<'rules' | 'editor' | 'preview'>('rules')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
@@ -185,6 +199,7 @@ export default function App() {
   const handleDownload = () => {
     const safeName = (filterName || 'filter').replace(/[^a-zA-Z0-9_-]/g, '_')
     downloadTextFile(fullFilterText(filterName, rules), `${safeName}.filter`)
+    downloadedRef.current = true
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -213,7 +228,7 @@ export default function App() {
           <button
             className={`btn ${isVisuals ? 'btn-primary' : 'btn-new'}`}
             onClick={() => navigate(isVisuals ? '/' : '/myvisuals')}
-          ><MdPalette /> My Visuals{visuals.length > 0 ? ` (${visuals.length})` : ''}</button>
+          ><MdPalette /> Saved Visuals{visuals.length > 0 ? ` (${visuals.length})` : ''}</button>
           <button className="btn" onClick={() => navigate('/prebuiltrules')}><MdMenuBook /> Prebuilt Rules</button>
           <button className="btn" onClick={() => fileRef.current?.click()}><MdFolderOpen /> Import .filter</button>
           <button className="btn btn-primary" onClick={() => setShowDownload(true)}><MdDownload /> Download .filter</button>
@@ -239,7 +254,7 @@ export default function App() {
               <button className="btn btn-new" onClick={() => { navigate('/'); setMobileMenuOpen(false) }}><MdArrowBack /> Back to Editor</button>
             )}
             <button className="btn btn-new" onClick={() => { handleNew(); setMobileMenuOpen(false) }}><MdAdd /> New Filter</button>
-            <button className={`btn ${isVisuals ? 'btn-primary' : 'btn-new'}`} onClick={() => { navigate(isVisuals ? '/' : '/myvisuals'); setMobileMenuOpen(false) }}><MdPalette /> My Visuals{visuals.length > 0 ? ` (${visuals.length})` : ''}</button>
+            <button className={`btn ${isVisuals ? 'btn-primary' : 'btn-new'}`} onClick={() => { navigate(isVisuals ? '/' : '/myvisuals'); setMobileMenuOpen(false) }}><MdPalette /> Saved Visuals{visuals.length > 0 ? ` (${visuals.length})` : ''}</button>
             <button className="btn" onClick={() => { navigate('/prebuiltrules'); setMobileMenuOpen(false) }}><MdMenuBook /> Prebuilt Rules</button>
             <button className="btn" onClick={() => { fileRef.current?.click(); setMobileMenuOpen(false) }}><MdFolderOpen /> Import .filter</button>
             <button className="btn btn-primary" onClick={() => { setShowDownload(true); setMobileMenuOpen(false) }}><MdDownload /> Download .filter</button>
@@ -317,8 +332,8 @@ export default function App() {
         <div className={`${styles.panelCenter} ${mobilePanel !== 'editor' ? styles.panelHidden : ''}`} style={{ width: `${colWidths[1]}%` }}>
           {!selectedRule ? (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}><MdShield /></div>
-              <div>Select a rule to edit</div>
+              <img src="/logo.png" alt="" className={styles.emptyIcon} />
+              <div>Add or select a rule to start editing</div>
             </div>
           ) : (
             <>
@@ -354,7 +369,7 @@ export default function App() {
                     className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`}
                     onClick={() => setTab(t)}
                   >
-                    {t === 'conditions' ? 'Conditions' : t === 'actions' ? 'Actions' : t === 'text' ? 'Filter Text' : 'Wiki'}
+                    {t === 'conditions' ? 'Conditions' : t === 'actions' ? 'Visuals' : t === 'text' ? 'Filter Text' : 'Wiki'}
                   </button>
                 ))}
               </div>

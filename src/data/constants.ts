@@ -58,9 +58,9 @@ export const EFFECT_COLORS = [
 ] as const
 
 export const EFFECT_COLOR_CSS: Record<string, string> = {
-  Red: '#ff0000', Green: '#44ff55', Blue: '#4488ff', Brown: '#aa7744',
-  White: '#eeeeee', Yellow: '#ffee44', Cyan: '#44ffff', Grey: '#888888',
-  Orange: '#ff8833', Pink: '#ff88cc', Purple: '#aa44ff', Black: '#000000',
+  Red: '#FF3127', Green: '#44ff55', Blue: '#1D7BE3', Brown: '#aa7744',
+  White: '#ffffff', Yellow: '#f3e709', Cyan: '#35FFFF', Grey: '#888888',
+  Orange: '#FF6400', Pink: '#ff88cc', Purple: '#aa44ff', Black: '#000000',
 }
 
 export const MINIMAP_SHAPES = [
@@ -70,13 +70,13 @@ export const MINIMAP_SHAPES = [
 ] as const
 
 export const SHAPE_CLIP_PATHS: Partial<Record<string, string>> = {
-  Diamond:        'polygon(50% 0%,100% 50%,50% 100%,0% 50%)',
+  Diamond:        '', // rendered as SVG in Preview (4-diamond cross pattern)
   Triangle:       'polygon(50% 0%,100% 100%,0% 100%)',
   Star:           'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)',
   Hexagon:        'polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)',
-  Cross:          'polygon(35% 0%,65% 0%,65% 35%,100% 35%,100% 65%,65% 65%,65% 100%,35% 100%,35% 65%,0% 65%,0% 35%,35% 35%)',
-  Pentagon:       'polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%)',
-  Moon:           'polygon(18% 5%,38% 0%,60% 3%,78% 12%,90% 26%,96% 42%,98% 50%,96% 58%,90% 74%,78% 88%,60% 97%,38% 100%,18% 95%,30% 80%,40% 65%,46% 50%,40% 35%,30% 20%)',
+  Cross:          '', // rendered as SVG in Preview (hollow cross-star, evenodd)
+  Pentagon:       '', // rendered as SVG in Preview (hollow pentagon, evenodd)
+  Moon:           '', // rendered as SVG in Preview (crescent via two circles, evenodd)
   Raindrop:       'polygon(50% 0%,64% 18%,76% 36%,84% 52%,87% 66%,84% 80%,75% 91%,62% 98%,50% 100%,38% 98%,25% 91%,16% 80%,13% 66%,16% 52%,24% 36%,36% 18%)',
   // kite — elongated diamond, wider at bottom half
   Kite:           'polygon(50% 0%,100% 30%,50% 100%,0% 30%)',

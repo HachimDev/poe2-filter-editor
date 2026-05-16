@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react'
 import { MdPlayArrow } from 'react-icons/md'
 import type { FilterRule, VisualPreset } from '../types'
-import { EFFECT_COLORS, MINIMAP_SHAPES, SHAPE_CLIP_PATHS, EFFECT_COLOR_CSS } from '../data/constants'
+import { EFFECT_COLORS, MINIMAP_SHAPES, EFFECT_COLOR_CSS } from '../data/constants'
+import MinimapIcon from './MinimapIcon'
 import ColorControl from './ColorControl'
 import styles from './EditorTabs.module.css'
 import vStyles from './VisualsPage.module.css'
@@ -230,8 +231,6 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
             <div className={styles.shapeGrid}>
               {MINIMAP_SHAPES.map(s => {
                 const col = EFFECT_COLOR_CSS[a.minimapIcon.color] ?? '#fff'
-                const clip = SHAPE_CLIP_PATHS[s]
-                const br = s === 'Circle' ? '50%' : '0'
                 const isSelected = a.minimapIcon.shape === s
                 return (
                   <div
@@ -250,13 +249,7 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                      <div style={{
-                        width: 16,
-                        height: 16,
-                        background: col,
-                        borderRadius: br,
-                        clipPath: clip,
-                      }} />
+                      <MinimapIcon shape={s} color={col} size={16} />
                     </div>
                     <span className={styles.shapeCellName}>{s === 'UpsideDownHouse' ? 'House↓' : s}</span>
                   </div>
