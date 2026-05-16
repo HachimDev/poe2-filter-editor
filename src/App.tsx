@@ -4,6 +4,7 @@ import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
 import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdMenu, MdFormatListBulleted, MdTune, MdVisibility, MdArrowBack, MdAutorenew } from 'react-icons/md'
 import type { FilterRule, EditorTab, VisualPreset } from './types'
 import { mkRule, uid, parseFilter, fullFilterText, downloadTextFile, generateRuleName } from './utils/filter'
+import { hasFSA, saveWithPicker } from './utils/fileSystem'
 import { useResizableColumns } from './utils/useResizableColumns'
 import ResizeHandle from './components/ResizeHandle'
 import ConditionsTab from './components/ConditionsTab'
@@ -196,10 +197,17 @@ export default function App() {
 
   // ── Export ────────────────────────────────────────────────────────────────
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const safeName = (filterName || 'filter').replace(/[^a-zA-Z0-9_-]/g, '_')
-    downloadTextFile(fullFilterText(filterName, rules), `${safeName}.filter`)
-    downloadedRef.current = true
+    const content = fullFilterText(filterName, rules)
+    const filename = `${safeName}.filter`
+    if (hasFSA) {
+      const saved = await saveWithPicker(filename, content)
+      if (saved) downloadedRef.current = true
+    } else {
+      downloadTextFile(content, filename)
+      downloadedRef.current = true
+    }
   }
 
   // ─────────────────────────────────────────────────────────────────────────

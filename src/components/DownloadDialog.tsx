@@ -3,7 +3,7 @@ import { useState } from 'react'
 import styles from './DownloadDialog.module.css'
 
 interface Props {
-  onDownload: () => void
+  onDownload: () => Promise<void> | void
   onClose: () => void
 }
 
@@ -43,7 +43,7 @@ export default function DownloadDialog({ onDownload, onClose }: Props) {
 
         <div className={styles.footer}>
           <button className="btn" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={() => { onDownload(); onClose() }}>
+          <button className="btn btn-primary" onClick={async () => { await onDownload(); onClose() }}>
             <MdDownload /> Download .filter
           </button>
         </div>
