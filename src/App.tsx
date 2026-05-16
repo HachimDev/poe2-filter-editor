@@ -384,7 +384,7 @@ export default function App() {
 
               <div className={styles.editorScroll}>
                 {tab === 'conditions' && <ConditionsTab rule={selectedRule} onChange={updateRule} />}
-                {tab === 'actions' && <ActionsTab rule={selectedRule} onChange={updateRule} visuals={visuals} onSaveAsVisual={saveActionsAsVisual} />}
+                {tab === 'actions' && <ActionsTab rule={selectedRule} onChange={updateRule} visuals={visuals} onSaveAsVisual={saveActionsAsVisual} onUpdateVisual={id => { const v = visuals.find(x => x.id === id); if (v) updateVisual({ ...v, actions: selectedRule.actions }) }} />}
                 {tab === 'text' && <TextTab rule={selectedRule} rules={rules} filterName={filterName} />}
                 {tab === 'wiki' && <WikiTab rule={selectedRule} />}
               </div>

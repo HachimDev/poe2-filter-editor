@@ -11,15 +11,18 @@ interface Props {
   onChange: (rule: FilterRule) => void
   visuals?: VisualPreset[]
   onSaveAsVisual?: (name: string) => void
+  onUpdateVisual?: (id: string) => void
 }
 
-export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: Props) {
+export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual, onUpdateVisual }: Props) {
   const [applyId, setApplyId] = useState('')
-  const [saveAsName, setSaveAsName] = useState('')
-  const [saveError, setSaveError] = useState(false)
+  const [saveSelectId, setSaveSelectId] = useState<string>(() => visuals?.[0]?.id ?? '__new__')
+  const [newVisualName, setNewVisualName] = useState('')
+  const [saveError, setSaveError] = useState('')
   const [showVolTip, setShowVolTip] = useState(false)
-  const saveInputRef = useRef<HTMLInputElement>(null)
+  const newNameRef = useRef<HTMLInputElement>(null)
   const effectiveApplyId = applyId || visuals?.[0]?.id || ''
+  const isNew = saveSelectId === '__new__'
   const a = rule.actions
   const upd = (patch: Partial<typeof a>) => onChange({ ...rule, actions: { ...a, ...patch } })
 
@@ -49,36 +52,70 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
           )}
           {onSaveAsVisual && (
             <div className={vStyles.applyBar}>
-              <div className={vStyles.applyBarTitle}>Save Visual As</div>
+              <div className={vStyles.applyBarTitle}>Save Visual</div>
               <div className={vStyles.applyRow}>
-                <input
-                  ref={saveInputRef}
-                  style={{ flex: 1, minWidth: 0, borderColor: saveError ? 'var(--hide-light)' : undefined }}
-                  value={saveAsName}
-                  placeholder="Visual name…"
-                  onChange={e => { setSaveAsName(e.target.value); setSaveError(false) }}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      if (!saveAsName.trim()) { setSaveError(true); return }
-                      onSaveAsVisual(saveAsName.trim())
-                      setSaveAsName('')
-                      setSaveError(false)
-                    }
-                  }}
-                />
+                {isNew ? (
+                  <>
+                    {visuals && visuals.length > 0 && (
+                      <button
+                        className="btn btn-sm"
+                        title="Back to saved visuals"
+                        onClick={() => { setSaveSelectId(visuals[0].id); setSaveError(''); setNewVisualName('') }}
+                      >←</button>
+                    )}
+                    <input
+                      ref={newNameRef}
+                      style={{ flex: 1, minWidth: 0, borderColor: saveError ? 'var(--hide-light)' : undefined }}
+                      value={newVisualName}
+                      placeholder="Visual name…"
+                      autoFocus
+                      onChange={e => { setNewVisualName(e.target.value); setSaveError('') }}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          const name = newVisualName.trim()
+                          if (!name) { setSaveError('Please enter a name.'); return }
+                          if (visuals?.some(v => v.name.toLowerCase() === name.toLowerCase())) { setSaveError('A visual with this name already exists.'); return }
+                          onSaveAsVisual(name)
+                          setNewVisualName('')
+                          setSaveError('')
+                          if (visuals && visuals.length > 0) setSaveSelectId(visuals[visuals.length - 1]?.id ?? '__new__')
+                        }
+                        if (e.key === 'Escape' && visuals && visuals.length > 0) {
+                          setSaveSelectId(visuals[0].id)
+                          setSaveError('')
+                        }
+                      }}
+                    />
+                  </>
+                ) : (
+                  <select
+                    style={{ flex: 1, minWidth: 0 }}
+                    value={saveSelectId}
+                    onChange={e => setSaveSelectId(e.target.value)}
+                  >
+                    {visuals!.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
+                    <option value="__new__">— New Visual —</option>
+                  </select>
+                )}
                 <button
                   className="btn btn-sm btn-primary"
                   onClick={() => {
-                    if (!saveAsName.trim()) { setSaveError(true); return }
-                    onSaveAsVisual(saveAsName.trim())
-                    setSaveAsName('')
-                    setSaveError(false)
+                    if (isNew) {
+                      const name = newVisualName.trim()
+                      if (!name) { setSaveError('Please enter a name.'); return }
+                      if (visuals?.some(v => v.name.toLowerCase() === name.toLowerCase())) { setSaveError('A visual with this name already exists.'); return }
+                      onSaveAsVisual(name)
+                      setNewVisualName('')
+                      setSaveError('')
+                    } else {
+                      onUpdateVisual?.(saveSelectId)
+                    }
                   }}
-                >Save</button>
+                >{isNew ? 'Save' : 'Update'}</button>
               </div>
               {saveError && (
                 <div style={{ fontSize: 10, color: 'var(--hide-light)', marginTop: 5 }}>
-                  Please enter a name for the visual.
+                  {saveError}
                 </div>
               )}
             </div>
