@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { useNavigate } from 'react-router-dom'
-import { MdArrowBack, MdCheck } from 'react-icons/md'
+import { MdCheck } from 'react-icons/md'
 import type { FilterRule } from '../types'
 import { PREBUILT_SETS } from '../data/prebuiltRules'
 import styles from './PrebuiltRulesDialog.module.css'
@@ -14,7 +13,6 @@ interface Props {
 const PREVIEW_LIMIT = 4
 
 export default function PrebuiltRulesPage({ onAdd }: Props) {
-  const navigate = useNavigate()
   const [added, setAdded] = useState<Set<string>>(new Set())
 
   const handleAdd = (setId: string, rules: FilterRule[]) => {
@@ -34,7 +32,6 @@ export default function PrebuiltRulesPage({ onAdd }: Props) {
       </Helmet>
       <div className={pageStyles.pageHeader}>
         <span className={pageStyles.pageTitle}>Prebuilt Rules</span>
-        <button className="btn btn-sm" onClick={() => navigate('/')}><MdArrowBack /> Back to Editor</button>
       </div>
 
       <div className={pageStyles.grid}>

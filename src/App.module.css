@@ -327,6 +327,160 @@
   opacity: 0.85;
 }
 
+/* ── Mobile-only elements (hidden on desktop) ── */
+.mobileMenuBtn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 24px;
+  padding: 4px;
+  margin-left: auto;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobileMenu {
+  display: none;
+}
+
+.mobileNav {
+  display: none;
+}
+
+.mobileNavBtn {
+  display: none;
+}
+
+/* ── Desktop-only elements ── */
+.desktopOnly {
+  /* visible on desktop, hidden via media query on mobile */
+}
+
+/* ── Panel visibility (mobile tab-switcher) ── */
+.panelHidden {
+  /* no-op on desktop — handled by media query */
+}
+
+/* ── Responsive: mobile ── */
+@media (max-width: 768px) {
+  /* Header */
+  .header {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .logoBadge {
+    display: none;
+  }
+
+  .logoImg {
+    height: 28px;
+  }
+
+  .logoText {
+    font-size: 15px;
+  }
+
+  .filterName {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+  }
+
+  .headerRight {
+    display: none;
+  }
+
+  .mobileMenuBtn {
+    display: flex;
+  }
+
+  .mobileMenu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 48px;
+    left: 0;
+    right: 0;
+    background: rgba(14, 14, 12, 0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 12px;
+    gap: 6px;
+    z-index: 100;
+  }
+
+  /* Workspace */
+  .workspace {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .panelLeft,
+  .panelCenter,
+  .panelRight {
+    width: 100% !important;
+    min-width: 0;
+    border-radius: 0;
+    border: none;
+  }
+
+  .panelHidden {
+    display: none !important;
+  }
+
+  .desktopOnly {
+    display: none;
+  }
+
+  /* Footer hidden — replaced by mobile nav */
+  .footer {
+    display: none;
+  }
+
+  /* Mobile bottom nav */
+  .mobileNav {
+    display: flex;
+    flex-shrink: 0;
+    background: rgba(14, 14, 12, 0.97);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border);
+    height: 56px;
+    z-index: 20;
+  }
+
+  .mobileNavBtn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 10px;
+    font-family: var(--font-sans);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0;
+    transition: color 0.15s;
+  }
+
+  .mobileNavBtn:hover {
+    color: var(--text);
+  }
+
+  .mobileNavActive {
+    color: var(--gold-text) !important;
+  }
+}
+
 /* ── Empty state ── */
 .emptyState {
   display: flex;

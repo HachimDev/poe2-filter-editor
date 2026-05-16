@@ -32,13 +32,13 @@ export const CONDITION_LABELS: Record<string, string> = {
 
 export const EFFECT_COLORS = [
   'Red', 'Green', 'Blue', 'Brown', 'White',
-  'Yellow', 'Cyan', 'Grey', 'Orange', 'Pink', 'Purple',
+  'Yellow', 'Cyan', 'Grey', 'Orange', 'Pink', 'Purple', 'Black',
 ] as const
 
 export const EFFECT_COLOR_CSS: Record<string, string> = {
   Red: '#ff0000', Green: '#44ff55', Blue: '#4488ff', Brown: '#aa7744',
   White: '#eeeeee', Yellow: '#ffee44', Cyan: '#44ffff', Grey: '#888888',
-  Orange: '#ff8833', Pink: '#ff88cc', Purple: '#aa44ff',
+  Orange: '#ff8833', Pink: '#ff88cc', Purple: '#aa44ff', Black: '#000000',
 }
 
 export const MINIMAP_SHAPES = [

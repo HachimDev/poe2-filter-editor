@@ -52,3 +52,9 @@
   color: var(--muted);
   font-style: italic;
 }
+
+@media (max-width: 768px) {
+  .visualBars {
+    flex-direction: column;
+  }
+}

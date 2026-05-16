@@ -3,9 +3,10 @@ import styles from './ResizeHandle.module.css'
 
 interface Props {
   onDrag: (dx: number) => void
+  className?: string
 }
 
-export default function ResizeHandle({ onDrag }: Props) {
+export default function ResizeHandle({ onDrag, className }: Props) {
   const [dragging, setDragging] = useState(false)
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -28,7 +29,7 @@ export default function ResizeHandle({ onDrag }: Props) {
 
   return (
     <div
-      className={`${styles.handle} ${dragging ? styles.dragging : ''}`}
+      className={`${styles.handle} ${dragging ? styles.dragging : ''} ${className ?? ''}`}
       onMouseDown={handleMouseDown}
     />
   )

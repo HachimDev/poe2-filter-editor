@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
-import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdShield } from 'react-icons/md'
+import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdShield, MdMenu, MdFormatListBulleted, MdTune, MdVisibility, MdArrowBack } from 'react-icons/md'
 import type { FilterRule, EditorTab, VisualPreset } from './types'
 import { mkRule, uid, parseFilter, fullFilterText, downloadTextFile } from './utils/filter'
 import { useResizableColumns } from './utils/useResizableColumns'
@@ -32,9 +32,12 @@ export default function App() {
   const [tab, setTab] = useState<EditorTab>('conditions')
   const [confirm, setConfirm] = useState<ConfirmState | null>(null)
   const [showDownload, setShowDownload] = useState(false)
+  const [mobilePanel, setMobilePanel] = useState<'rules' | 'editor' | 'preview'>('rules')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const isVisuals = pathname === '/myvisuals'
+  const isSubPage = pathname !== '/'
   const [visuals, setVisuals] = useState<VisualPreset[]>(() => {
     try { return JSON.parse(localStorage.getItem('poe2fe-visuals') ?? '[]') } catch { return [] }
   })
@@ -102,6 +105,7 @@ export default function App() {
   const selectRule = (id: string) => {
     setSelectedId(id)
     setTab('conditions')
+    setMobilePanel('editor')
   }
 
   // ── Visual presets ────────────────────────────────────────────────────────
@@ -194,6 +198,9 @@ export default function App() {
           onChange={e => setFilterName(e.target.value)}
         />
         <div className={styles.headerRight}>
+          {isSubPage && (
+            <button className="btn btn-new" onClick={() => navigate('/')}><MdArrowBack /> Editor</button>
+          )}
           <button className="btn btn-new" onClick={handleNew}><MdAdd /> New Filter</button>
           <button
             className={`btn ${isVisuals ? 'btn-primary' : 'btn-new'}`}
@@ -202,14 +209,34 @@ export default function App() {
           <button className="btn" onClick={() => navigate('/prebuiltrules')}><MdMenuBook /> Prebuilt Rules</button>
           <button className="btn" onClick={() => fileRef.current?.click()}><MdFolderOpen /> Import .filter</button>
           <button className="btn btn-primary" onClick={() => setShowDownload(true)}><MdDownload /> Download .filter</button>
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".filter,.txt"
-            style={{ display: 'none' }}
-            onChange={handleImport}
-          />
         </div>
+
+        {/* Mobile hamburger */}
+        <button className={styles.mobileMenuBtn} onClick={() => setMobileMenuOpen(o => !o)}>
+          {mobileMenuOpen ? <MdClose /> : <MdMenu />}
+        </button>
+
+        <input
+          ref={fileRef}
+          type="file"
+          accept=".filter,.txt"
+          style={{ display: 'none' }}
+          onChange={handleImport}
+        />
+
+        {/* Mobile dropdown menu */}
+        {mobileMenuOpen && (
+          <div className={styles.mobileMenu}>
+            {isSubPage && (
+              <button className="btn btn-new" onClick={() => { navigate('/'); setMobileMenuOpen(false) }}><MdArrowBack /> Back to Editor</button>
+            )}
+            <button className="btn btn-new" onClick={() => { handleNew(); setMobileMenuOpen(false) }}><MdAdd /> New Filter</button>
+            <button className={`btn ${isVisuals ? 'btn-primary' : 'btn-new'}`} onClick={() => { navigate(isVisuals ? '/' : '/myvisuals'); setMobileMenuOpen(false) }}><MdPalette /> My Visuals{visuals.length > 0 ? ` (${visuals.length})` : ''}</button>
+            <button className="btn" onClick={() => { navigate('/prebuiltrules'); setMobileMenuOpen(false) }}><MdMenuBook /> Prebuilt Rules</button>
+            <button className="btn" onClick={() => { fileRef.current?.click(); setMobileMenuOpen(false) }}><MdFolderOpen /> Import .filter</button>
+            <button className="btn btn-primary" onClick={() => { setShowDownload(true); setMobileMenuOpen(false) }}><MdDownload /> Download .filter</button>
+          </div>
+        )}
       </header>
 
       {/* WORKSPACE */}
@@ -240,7 +267,7 @@ export default function App() {
         </Helmet>
 
         {/* LEFT — Rule List */}
-        <div className={styles.panelLeft} style={{ width: `${colWidths[0]}%` }}>
+        <div className={`${styles.panelLeft} ${mobilePanel !== 'rules' ? styles.panelHidden : ''}`} style={{ width: `${colWidths[0]}%` }}>
           <div className={styles.panelHeader}>
             <span>{rules.length} Rule{rules.length !== 1 ? 's' : ''}</span>
             <button className="btn btn-sm" onClick={addRule}><MdAdd /> Add Rule</button>
@@ -271,10 +298,10 @@ export default function App() {
           </div>
         </div>
 
-        <ResizeHandle onDrag={onDragLeft} />
+        <ResizeHandle onDrag={onDragLeft} className={styles.desktopOnly} />
 
         {/* CENTER — Editor */}
-        <div className={styles.panelCenter} style={{ width: `${colWidths[1]}%` }}>
+        <div className={`${styles.panelCenter} ${mobilePanel !== 'editor' ? styles.panelHidden : ''}`} style={{ width: `${colWidths[1]}%` }}>
           {!selectedRule ? (
             <div className={styles.emptyState}>
               <div className={styles.emptyIcon}><MdShield /></div>
@@ -323,10 +350,10 @@ export default function App() {
           )}
         </div>
 
-        <ResizeHandle onDrag={onDragRight} />
+        <ResizeHandle onDrag={onDragRight} className={styles.desktopOnly} />
 
         {/* RIGHT — Preview */}
-        <div className={styles.panelRight} style={{ width: `${colWidths[2]}%` }}>
+        <div className={`${styles.panelRight} ${mobilePanel !== 'preview' ? styles.panelHidden : ''}`} style={{ width: `${colWidths[2]}%` }}>
           <div className={styles.panelHeader}><span>Live Preview</span></div>
           <Preview rule={selectedRule} />
         </div>
@@ -334,6 +361,21 @@ export default function App() {
       </div>
         } />
       </Routes>
+
+      {/* MOBILE BOTTOM NAV — only on home route */}
+      {pathname === '/' && (
+        <nav className={styles.mobileNav}>
+          <button className={`${styles.mobileNavBtn} ${mobilePanel === 'rules' ? styles.mobileNavActive : ''}`} onClick={() => setMobilePanel('rules')}>
+            <MdFormatListBulleted size={20} /><span>Rules</span>
+          </button>
+          <button className={`${styles.mobileNavBtn} ${mobilePanel === 'editor' ? styles.mobileNavActive : ''}`} onClick={() => setMobilePanel('editor')}>
+            <MdTune size={20} /><span>Editor</span>
+          </button>
+          <button className={`${styles.mobileNavBtn} ${mobilePanel === 'preview' ? styles.mobileNavActive : ''}`} onClick={() => setMobilePanel('preview')}>
+            <MdVisibility size={20} /><span>Preview</span>
+          </button>
+        </nav>
+      )}
 
       {/* FOOTER */}
       <footer className={styles.footer}>
