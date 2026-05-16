@@ -219,7 +219,7 @@ export default function App() {
         <div className={styles.logo}>
           <img src="/logo.png" alt="" className={styles.logoImg} />
           <span className={styles.logoText} onClick={() => navigate('/')}>AnnulFilter</span>
-          <span className={styles.logoBadge}>PoE2 v0.4</span>
+          <span className={styles.logoBadge} title="This filter is up to date for The Last of the Druids">PoE2 v0.4</span>
         </div>
         <input
           className={styles.filterName}
@@ -364,10 +364,10 @@ export default function App() {
                   onChange={e => updateRule({ ...selectedRule, comment: e.target.value, commentAuto: false })}
                 />
                 <button
-                  className="icon-btn"
+                  className="btn btn-sm"
                   title="Generate name from conditions"
                   onClick={() => updateRule({ ...selectedRule, comment: generateRuleName(selectedRule.conditions), commentAuto: true })}
-                ><MdAutorenew /></button>
+                >Auto Name</button>
               </div>
 
               <div className={styles.tabs}>
