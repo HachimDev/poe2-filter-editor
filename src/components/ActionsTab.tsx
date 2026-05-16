@@ -34,7 +34,7 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
         <div className={vStyles.visualBars}>
           {visuals && visuals.length > 0 && (
             <div className={vStyles.applyBar}>
-              <div className={vStyles.applyBarTitle}>Apply Visual</div>
+              <div className={vStyles.applyBarTitle}>Load Visual</div>
               <div className={vStyles.applyRow}>
                 <select
                   style={{ flex: 1, minWidth: 0 }}
@@ -49,7 +49,7 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
           )}
           {onSaveAsVisual && (
             <div className={vStyles.applyBar}>
-              <div className={vStyles.applyBarTitle}>Save as Visual</div>
+              <div className={vStyles.applyBarTitle}>Save Visual As</div>
               <div className={vStyles.applyRow}>
                 <input
                   ref={saveInputRef}
