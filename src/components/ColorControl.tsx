@@ -61,7 +61,7 @@ export default function ColorControl({ label, value, onChange, toggleable = fals
               ))}
               <option value="Custom">— Custom —</option>
             </select>
-            <span className={styles.alphaLabel}>Alpha</span>
+            <span className={styles.alphaLabel}>Transparency</span>
             <input
               type="range" min={0} max={255} value={value.a}
               style={{ width: 80 }}

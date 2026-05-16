@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react'
-import { MdPlayArrow } from 'react-icons/md'
 import type { FilterRule, VisualPreset } from '../types'
 import { EFFECT_COLORS, MINIMAP_SHAPES, EFFECT_COLOR_CSS } from '../data/constants'
 import MinimapIcon from './MinimapIcon'
@@ -175,7 +174,7 @@ export default function ActionsTab({ rule, onChange, visuals, onSaveAsVisual }: 
                 audio.volume = a.playAlertSound.volume / 300
                 audio.play().catch(() => {})
               }}
-            ><MdPlayArrow /></button>
+            >Play</button>
             <span className={styles.inlineLabel}>Volume</span>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               {showVolTip && (
