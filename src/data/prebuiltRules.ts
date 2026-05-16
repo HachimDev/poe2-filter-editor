@@ -65,11 +65,29 @@ Show # Gold
   SetBackgroundColor 20 20 0 180
 `
 
+const EXOTIC_TEXT = `
+Show # Quest items
+	Class == "Quest Items" "Instance Local Items"
+	SetFontSize 36
+	SetTextColor 74 230 58 255
+  SetBorderColor 68 255 85 255
+	SetBackgroundColor 0 0 0 255
+	PlayAlertSound 3 300
+	PlayEffect Green
+	MinimapIcon 0 Green Pentagon
+`
+
 export const PREBUILT_SETS: PrebuiltSet[] = [
   {
     id: 'gold',
     name: 'Gold',
     description: 'Tiered gold pickup rules based on stack size and area level. Highlights large stacks prominently and quietly shows the rest.',
     rules: parseFilter(GOLD_TEXT),
+  },
+  {
+    id: 'exotic-bases',
+    name: 'Quest Items',
+    description: 'Highlights Instance Local Items and Quest Items with a large green label, alert sound, green beam, and large green pentagon minimap icon.',
+    rules: parseFilter(EXOTIC_TEXT),
   },
 ]

@@ -1,14 +1,15 @@
 import { useState, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
-import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdShield, MdMenu, MdFormatListBulleted, MdTune, MdVisibility, MdArrowBack } from 'react-icons/md'
+import { MdAdd, MdPalette, MdMenuBook, MdFolderOpen, MdDownload, MdKeyboardArrowUp, MdKeyboardArrowDown, MdContentCopy, MdClose, MdShield, MdMenu, MdFormatListBulleted, MdTune, MdVisibility, MdArrowBack, MdAutorenew } from 'react-icons/md'
 import type { FilterRule, EditorTab, VisualPreset } from './types'
-import { mkRule, uid, parseFilter, fullFilterText, downloadTextFile } from './utils/filter'
+import { mkRule, uid, parseFilter, fullFilterText, downloadTextFile, generateRuleName } from './utils/filter'
 import { useResizableColumns } from './utils/useResizableColumns'
 import ResizeHandle from './components/ResizeHandle'
 import ConditionsTab from './components/ConditionsTab'
 import ActionsTab from './components/ActionsTab'
 import TextTab from './components/TextTab'
+import WikiTab from './components/WikiTab'
 import Preview from './components/Preview'
 import ConfirmDialog from './components/ConfirmDialog'
 import DownloadDialog from './components/DownloadDialog'
@@ -87,7 +88,14 @@ export default function App() {
   }
 
   const updateRule = (updated: FilterRule) => {
-    setRules(prev => prev.map(r => r.id === updated.id ? updated : r))
+    setRules(prev => prev.map(r => {
+      if (r.id !== updated.id) return r
+      if (updated.commentAuto) {
+        const conditionsChanged = JSON.stringify(r.conditions) !== JSON.stringify(updated.conditions)
+        if (conditionsChanged) return { ...updated, comment: generateRuleName(updated.conditions) }
+      }
+      return updated
+    }))
   }
 
   const duplicateRule = (id: string) => {
@@ -270,6 +278,11 @@ export default function App() {
         <div className={`${styles.panelLeft} ${mobilePanel !== 'rules' ? styles.panelHidden : ''}`} style={{ width: `${colWidths[0]}%` }}>
           <div className={styles.panelHeader}>
             <span>{rules.length} Rule{rules.length !== 1 ? 's' : ''}</span>
+            <button
+              className="btn btn-sm"
+              title="Generate names for all rules from their conditions"
+              onClick={() => setRules(prev => prev.map(r => ({ ...r, comment: generateRuleName(r.conditions), commentAuto: true })))}
+            ><MdAutorenew /> Rename All</button>
             <button className="btn btn-sm" onClick={addRule}><MdAdd /> Add Rule</button>
           </div>
           <div className={styles.ruleList}>
@@ -325,18 +338,23 @@ export default function App() {
                   style={{ flex: 1, padding: '4px 9px' }}
                   value={selectedRule.comment ?? ''}
                   placeholder="Rule name / comment…"
-                  onChange={e => updateRule({ ...selectedRule, comment: e.target.value })}
+                  onChange={e => updateRule({ ...selectedRule, comment: e.target.value, commentAuto: false })}
                 />
+                <button
+                  className="icon-btn"
+                  title="Generate name from conditions"
+                  onClick={() => updateRule({ ...selectedRule, comment: generateRuleName(selectedRule.conditions), commentAuto: true })}
+                ><MdAutorenew /></button>
               </div>
 
               <div className={styles.tabs}>
-                {(['conditions', 'actions', 'text'] as const).map(t => (
+                {(['conditions', 'actions', 'text', 'wiki'] as const).map(t => (
                   <button
                     key={t}
                     className={`${styles.tab} ${tab === t ? styles.tabActive : ''}`}
                     onClick={() => setTab(t)}
                   >
-                    {t === 'conditions' ? 'Conditions' : t === 'actions' ? 'Actions' : 'Filter Text'}
+                    {t === 'conditions' ? 'Conditions' : t === 'actions' ? 'Actions' : t === 'text' ? 'Filter Text' : 'Wiki'}
                   </button>
                 ))}
               </div>
@@ -345,6 +363,7 @@ export default function App() {
                 {tab === 'conditions' && <ConditionsTab rule={selectedRule} onChange={updateRule} />}
                 {tab === 'actions' && <ActionsTab rule={selectedRule} onChange={updateRule} visuals={visuals} onSaveAsVisual={saveActionsAsVisual} />}
                 {tab === 'text' && <TextTab rule={selectedRule} rules={rules} filterName={filterName} />}
+                {tab === 'wiki' && <WikiTab rule={selectedRule} />}
               </div>
             </>
           )}

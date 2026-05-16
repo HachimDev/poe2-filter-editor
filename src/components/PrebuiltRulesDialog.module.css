@@ -74,6 +74,8 @@
   border-radius: 6px;
   padding: 14px 16px;
   transition: border-color 0.15s;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
@@ -113,6 +115,7 @@
   flex-direction: column;
   gap: 3px;
   margin-bottom: 12px;
+  flex: 1;
 }
 
 .ruleEntry {

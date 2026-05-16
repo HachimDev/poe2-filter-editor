@@ -2,16 +2,26 @@ export const RARITIES = ['Normal', 'Magic', 'Rare', 'Unique'] as const
 
 export const NUMERIC_OPS = ['>=', '<=', '>', '<', '='] as const
 
-export const NUMERIC_FIELDS = ['AreaLevel', 'ItemLevel', 'StackSize', 'Quality', 'Sockets'] as const
+export const NUMERIC_FIELDS = [
+  'AreaLevel', 'ItemLevel', 'StackSize', 'Quality', 'Sockets',
+  'GemLevel', 'WaystoneTier', 'BaseArmour', 'BaseEnergyShield', 'BaseEvasion',
+  'Height', 'Width', 'UnidentifiedItemTier',
+] as const
 
 export const STRING_FIELDS = ['BaseType', 'Class'] as const
 
-export const BOOL_FIELDS = ['Identified', 'Corrupted', 'Mirrored'] as const
+export const BOOL_FIELDS = [
+  'Identified', 'Corrupted', 'Mirrored',
+  'AnyEnchantment', 'HasVaalUniqueMod', 'IsVaalUnique', 'TwiceCorrupted',
+] as const
 
 export const ALL_CONDITION_FIELDS = [
   'BaseType', 'Class', 'Rarity',
   'AreaLevel', 'ItemLevel', 'StackSize', 'Quality', 'Sockets',
+  'GemLevel', 'WaystoneTier', 'BaseArmour', 'BaseEnergyShield', 'BaseEvasion',
+  'Height', 'Width', 'UnidentifiedItemTier',
   'Identified', 'Corrupted', 'Mirrored',
+  'AnyEnchantment', 'HasVaalUniqueMod', 'IsVaalUnique', 'TwiceCorrupted',
   'HasExplicitMod',
 ] as const
 
@@ -24,9 +34,21 @@ export const CONDITION_LABELS: Record<string, string> = {
   StackSize: 'Stack Size',
   Quality: 'Quality',
   Sockets: 'Sockets',
+  GemLevel: 'Gem Level',
+  WaystoneTier: 'Waystone Tier',
+  BaseArmour: 'Base Armour',
+  BaseEnergyShield: 'Base Energy Shield',
+  BaseEvasion: 'Base Evasion',
+  Height: 'Height',
+  Width: 'Width',
+  UnidentifiedItemTier: 'Unidentified Item Tier',
   Identified: 'Identified',
   Corrupted: 'Corrupted',
   Mirrored: 'Mirrored',
+  AnyEnchantment: 'Any Enchantment',
+  HasVaalUniqueMod: 'Has Vaal Unique Mod',
+  IsVaalUnique: 'Is Vaal Unique',
+  TwiceCorrupted: 'Twice Corrupted',
   HasExplicitMod: 'Explicit Mod',
 }
 
@@ -66,9 +88,13 @@ export const CLASS_LIST = [
   'Amulets', 'Belts', 'Body Armours', 'Boots', 'Bows', 'Bucklers',
   'Crossbows', 'Foci', 'Gloves', 'Helmets', 'One Hand Maces', 'Quarterstaves',
   'Quivers', 'Rings', 'Sceptres', 'Shields', 'Spears', 'Staves',
-  'Talismans', 'Two Hand Maces', 'Wands', 'Flasks', 'Charms',
+  'Talismans', 'Two Hand Maces', 'Wands', 'Life Flasks', 'Mana Flasks', 'Charms',
+  'Skill Gems', 'Support Gems',
   'Stackable Currency', 'Jewels', 'Waystones', 'Map Fragments',
   'Misc Map Items', 'Tablets',
+  'Instance Local Items', 'Quest Items', 'Fishing Rods',
+  'Incubators', 'Omen', 'Pinnacle Keys', 'Expedition Logbooks',
+  'Augment', 'Vault Keys',
 ] as const
 
 export const DEFAULT_COL_WIDTHS: [number, number, number] = [30, 40, 30]

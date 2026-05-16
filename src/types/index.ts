@@ -28,6 +28,8 @@ export interface RarityCondition {
 export interface NumericCondition {
   id: string
   field: 'AreaLevel' | 'ItemLevel' | 'StackSize' | 'Quality' | 'Sockets'
+    | 'GemLevel' | 'WaystoneTier' | 'BaseArmour' | 'BaseEnergyShield' | 'BaseEvasion'
+    | 'Height' | 'Width' | 'UnidentifiedItemTier'
   operator: '>=' | '<=' | '>' | '<' | '='
   value: number
 }
@@ -35,6 +37,7 @@ export interface NumericCondition {
 export interface BoolCondition {
   id: string
   field: 'Identified' | 'Corrupted' | 'Mirrored'
+    | 'AnyEnchantment' | 'HasVaalUniqueMod' | 'IsVaalUnique' | 'TwiceCorrupted'
   value: 'True' | 'False'
 }
 
@@ -95,6 +98,7 @@ export interface FilterRule {
   id: string
   type: RuleType
   comment: string
+  commentAuto?: boolean
   conditions: Condition[]
   actions: FilterActions
 }
@@ -109,4 +113,4 @@ export interface VisualPreset {
 
 // ─── App tabs ─────────────────────────────────────────────────────────────────
 
-export type EditorTab = 'conditions' | 'actions' | 'text'
+export type EditorTab = 'conditions' | 'actions' | 'text' | 'wiki'

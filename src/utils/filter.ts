@@ -36,8 +36,61 @@ export function mkActions(): FilterActions {
   }
 }
 
+const OP_SYMBOL: Record<string, string> = { '>=': '≥', '<=': '≤', '>': '>', '<': '<', '=': '=' }
+const RARITY_ABBREV: Record<string, string> = { Normal: 'N', Magic: 'M', Rare: 'R', Unique: 'U' }
+const NUMERIC_SHORT: Record<string, string> = {
+  ItemLevel: 'iLvl', StackSize: 'Stack', AreaLevel: 'Area', Quality: 'Q', Sockets: 'Sockets',
+  GemLevel: 'GemLvl', WaystoneTier: 'WTier', BaseArmour: 'Armour',
+  BaseEnergyShield: 'ES', BaseEvasion: 'Eva', Height: 'H', Width: 'W',
+  UnidentifiedItemTier: 'UITier',
+}
+const BOOL_NEGATED: Record<string, string> = {
+  Corrupted: 'Uncorrupted', Mirrored: 'Unmirrored', Identified: 'Unidentified',
+  AnyEnchantment: 'No Enchantment', HasVaalUniqueMod: 'No Vaal Mod',
+  IsVaalUnique: 'Not Vaal Unique', TwiceCorrupted: 'Not Twice Corrupted',
+}
+
+function labelValues(vals: string[]): string {
+  if (vals.length <= 3) return vals.join(', ')
+  return `${vals[0]} +${vals.length - 1} more`
+}
+
+export function generateRuleName(conditions: FilterRule['conditions']): string {
+  if (conditions.length === 0) return 'New Rule'
+
+  const bt  = conditions.find(c => c.field === 'BaseType')     as { values: string[] } | undefined
+  const cl  = conditions.find(c => c.field === 'Class')        as { values: string[] } | undefined
+  const rar = conditions.find(c => c.field === 'Rarity')       as { values: string[] } | undefined
+  const mod = conditions.find(c => c.field === 'HasExplicitMod') as { values: string[] } | undefined
+  const nums = conditions.filter(c => NUMERIC_FIELDS.includes(c.field as NumericField)) as { field: string; operator: string; value: number }[]
+  const bools = conditions.filter(c => BOOL_FIELDS.includes(c.field as BoolField))     as { field: string; value: string }[]
+
+  // Main label — BaseType > Class > ExplicitMod
+  let label = ''
+  if (bt?.values.length)  label = labelValues(bt.values)
+  else if (cl?.values.length)  label = labelValues(cl.values)
+  else if (mod?.values.length) label = labelValues(mod.values)
+
+  // Qualifier tokens (go in parentheses after label)
+  const quals: string[] = []
+  if (rar?.values.length) quals.push(rar.values.map(v => RARITY_ABBREV[v] ?? v).join('/'))
+  for (const nc of nums) {
+    const short = NUMERIC_SHORT[nc.field] ?? nc.field
+    const op    = OP_SYMBOL[nc.operator] ?? nc.operator
+    const pct   = nc.field === 'Quality' ? '%' : ''
+    quals.push(`${short}${op}${nc.value}${pct}`)
+  }
+  for (const bc of bools) {
+    quals.push(bc.value === 'False' ? (BOOL_NEGATED[bc.field] ?? `Not ${bc.field}`) : bc.field)
+  }
+
+  if (label) return quals.length ? `${label} (${quals.join(', ')})` : label
+  if (quals.length) return quals.join(', ')
+  return 'New Rule'
+}
+
 export function mkRule(type: 'Show' | 'Hide' = 'Show'): FilterRule {
-  return { id: uid(), type, comment: 'New Rule', conditions: [], actions: mkActions() }
+  return { id: uid(), type, comment: 'New Rule', commentAuto: true, conditions: [], actions: mkActions() }
 }
 
 export function mkCondition(field: string): Condition {
@@ -120,7 +173,7 @@ export function parseFilter(text: string): FilterRule[] {
       const comment = cm
         ? cm[1].replace(/\$[^\s]+ /g, '').replace(/![^\s]+/g, '').trim()
         : ''
-      cur = { id: uid(), type, comment, conditions: [], actions: mkActions() }
+      cur = { id: uid(), type, comment, commentAuto: false, conditions: [], actions: mkActions() }
       continue
     }
 
@@ -148,10 +201,10 @@ export function parseFilter(text: string): FilterRule[] {
     if ((m = line.match(/^PlayAlertSound (\S+)(?: (\d+))?/))) {
       a.playAlertSound = { enabled: true, id: isNaN(+m[1]) ? 1 : +m[1], volume: m[2] ? +m[2] : 300 }; continue
     }
-    if ((m = line.match(/^BaseType (?:==|!=) (.+)/))) {
+    if ((m = line.match(/^BaseType (?:(?:==|!=) )?(.+)/))) {
       cur.conditions.push({ id: uid(), field: 'BaseType', values: [...m[1].matchAll(/"([^"]+)"/g)].map(x => x[1]) }); continue
     }
-    if ((m = line.match(/^Class (?:==|!=) (.+)/))) {
+    if ((m = line.match(/^Class (?:(?:==|!=) )?(.+)/))) {
       cur.conditions.push({ id: uid(), field: 'Class', values: [...m[1].matchAll(/"([^"]+)"/g)].map(x => x[1]) }); continue
     }
     if ((m = line.match(/^Rarity (.+)/))) {
@@ -160,8 +213,8 @@ export function parseFilter(text: string): FilterRule[] {
 
     let hit = false
     for (const f of NUMERIC_FIELDS) {
-      if ((m = line.match(new RegExp(`^${f} (>=|<=|>|<|=) (\\d+)`)))) {
-        cur.conditions.push({ id: uid(), field: f, operator: m[1] as '>=', value: +m[2] })
+      if ((m = line.match(new RegExp(`^${f} (?:(>=|<=|>|<|=) )?(\\d+)`)))) {
+        cur.conditions.push({ id: uid(), field: f, operator: (m[1] ?? '=') as '>=', value: +m[2] })
         hit = true; break
       }
     }
