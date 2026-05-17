@@ -1,5 +1,5 @@
 import type { Condition, FilterRule, NumericCondition, BoolCondition, ExplicitModCondition, BaseTypeCondition, RarityCondition } from '../types'
-import { RARITIES, NUMERIC_OPS, NUMERIC_FIELDS, STRING_FIELDS, BOOL_FIELDS, CONDITION_LABELS } from '../data/constants'
+import { RARITIES, NUMERIC_OPS, NUMERIC_FIELDS, STRING_FIELDS, BOOL_FIELDS, CONDITION_LABELS, CONDITION_DESCRIPTIONS } from '../data/constants'
 import BaseTypeSelect from './BaseTypeSelect'
 import styles from './ConditionRow.module.css'
 import { MdClose } from 'react-icons/md'
@@ -112,6 +112,9 @@ export default function ConditionRow({ cond, onChange, onRemove }: Props) {
           <MdClose size={13} /> Remove
         </button>
       </div>
+      {CONDITION_DESCRIPTIONS[cond.field] && (
+        <div className={styles.desc}>{CONDITION_DESCRIPTIONS[cond.field]}</div>
+      )}
       {body}
     </div>
   )

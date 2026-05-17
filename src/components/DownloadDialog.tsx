@@ -37,7 +37,7 @@ export default function DownloadDialog({ onDownload, onClose }: Props) {
             </button>
           </div>
           <p className={styles.sub}>
-            Then enable it in-game under <strong>Options → UI → Item Filter</strong>.
+            Then enable it in-game under <strong>Options → Game → Item Filter</strong>.
           </p>
         </div>
 

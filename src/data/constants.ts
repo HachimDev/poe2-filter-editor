@@ -25,6 +25,33 @@ export const ALL_CONDITION_FIELDS = [
   'HasExplicitMod',
 ] as const
 
+export const CONDITION_DESCRIPTIONS: Record<string, string> = {
+  BaseType: 'Matches items by their base name (e.g. "Siege Axe", "Gold Ring").',
+  Class: 'Matches items by category (e.g. "Helmets", "Rings", "Waystones").',
+  Rarity: 'Matches by item rarity: Normal, Magic, Rare, or Unique.',
+  AreaLevel: 'Matches by the level of the zone where the item drops.',
+  ItemLevel: "Matches by the item's level (ilvl), which determines mod tiers.",
+  StackSize: 'Matches currency or stackable items by their current stack size.',
+  Quality: 'Matches by item quality percentage (0–100%).',
+  Sockets: 'Matches by the total number of sockets on the item.',
+  GemLevel: 'Matches skill or support gems by their current level.',
+  WaystoneTier: 'Matches Waystones by their tier (1–16).',
+  BaseArmour: 'Matches equipment by its base armour value before modifiers.',
+  BaseEnergyShield: 'Matches equipment by its base energy shield value before modifiers.',
+  BaseEvasion: 'Matches equipment by its base evasion rating before modifiers.',
+  Height: "Matches by the item's height in inventory slots (1–4).",
+  Width: "Matches by the item's width in inventory slots (1–2).",
+  UnidentifiedItemTier: 'Matches unidentified items by their hidden tier level.',
+  Identified: 'Matches items based on whether they have been identified.',
+  Corrupted: 'Matches items based on whether they are corrupted.',
+  Mirrored: 'Matches items based on whether they are mirrored.',
+  AnyEnchantment: 'Matches items that have any enchantment applied.',
+  HasVaalUniqueMod: 'Matches items that have a Vaal version of a unique modifier.',
+  IsVaalUnique: 'Matches items that are Vaal unique variants.',
+  TwiceCorrupted: 'Matches items that have been corrupted twice.',
+  HasExplicitMod: 'Matches items that have specific named explicit modifiers.',
+}
+
 export const CONDITION_LABELS: Record<string, string> = {
   BaseType: 'Base Type',
   Class: 'Class',

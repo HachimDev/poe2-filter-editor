@@ -16,7 +16,7 @@ export default function ConditionsTab({ rule, onChange }: Props) {
 
   const used = rule.conditions.map(c => c.field)
   const available = ALL_CONDITION_FIELDS.filter(
-    f => !used.includes(f) || f === 'BaseType' || f === 'HasExplicitMod'
+    f => !used.includes(f) || f === 'HasExplicitMod'
   )
 
   const addCondition = () => {
@@ -25,7 +25,7 @@ export default function ConditionsTab({ rule, onChange }: Props) {
     onChange({ ...rule, conditions: next })
     const nextUsed = next.map(n => n.field)
     const nextAvailable = ALL_CONDITION_FIELDS.filter(
-      f => !nextUsed.includes(f) || f === 'BaseType' || f === 'HasExplicitMod'
+      f => !nextUsed.includes(f) || f === 'HasExplicitMod'
     )
     if (nextAvailable.length > 0) setNewField(nextAvailable[0])
   }
